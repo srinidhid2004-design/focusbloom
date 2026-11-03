@@ -143,10 +143,35 @@ The new section contains 14 narrow 390×844 references, two wide 1024×768
 references, reusable editable components, and a 2500×1160 overview. Historical
 Part 3.1 sections remain. Static Figma inspection is not runtime verification.
 
-## Existing foundation and local checks
+## Fresh public checkout and local verification
 
-Prerequisites used by the preserved scaffold are Python 3.14 and Node.js 24.
-From the repository root in PowerShell:
+Prerequisites are Git, Python 3.14 through the Windows `py` launcher, and Node.js
+24 with npm. Use PowerShell. The commands below intentionally create only ignored
+local dependencies, build output, and `data/app.sqlite3`; they do not configure
+Gemini. From the directory that should contain the clone:
+
+```powershell
+git clone https://github.com/srinidhid2004-design/focusbloom.git
+Set-Location focusbloom
+git checkout feature/assignment-3-part-3
+py -3.14 -m venv backend/.venv
+backend/.venv/Scripts/python.exe -m pip install -r backend/requirements.txt pytest==9.1.1 httpx==0.28.1
+Push-Location frontend
+npm ci
+Pop-Location
+```
+
+Initialize a new version-2 local database without a key:
+
+```powershell
+New-Item -ItemType Directory -Force -Path data | Out-Null
+$env:DATABASE_PATH = Join-Path (Resolve-Path data).Path 'app.sqlite3'
+Push-Location backend
+.venv/Scripts/python.exe -c "from app.config import Settings; from app.database import Repository; settings = Settings(_env_file=None); Repository(settings.database_path).initialize(); print('FocusBloom schema version 2 initialized.')"
+Pop-Location
+```
+
+Run the complete local checks:
 
 ```powershell
 backend/.venv/Scripts/python.exe -m pip check
@@ -160,11 +185,40 @@ npm run build
 Pop-Location
 ```
 
+Start the backend in one PowerShell window from the clone root:
+
+```powershell
+$env:DATABASE_PATH = Join-Path (Resolve-Path data).Path 'app.sqlite3'
+Push-Location backend
+.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+Start the frontend in a second PowerShell window from the clone root:
+
+```powershell
+Push-Location frontend
+npm run dev -- --host 127.0.0.1
+```
+
+From a third PowerShell window, confirm safe health and then open the application:
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8000/api/health | ConvertTo-Json
+Start-Process http://127.0.0.1:5173/
+```
+
+Expected health values are service `ok`, schema version `2`, database
+`available`, and Gemini key `not configured`. With no key, Focus Garden, the
+static reviewed Perspective example, History, saved-text controls, and Support
+remain available. A custom Perspective submission preserves the fictional input
+and shows the safe missing-configuration path without a provider call. Stop each
+development server with `Ctrl+C`; `Pop-Location` may then restore each terminal's
+previous directory.
+
 The backend tests initialize version-2 databases only in temporary test
-directories. Prompt 10 separately initialized the approved ignored project
-runtime database and made one bounded live request from the supplied fictional
-Perspective example. The Vue application implements the selected FocusBloom
-experience and the exact approved backend contracts.
+directories. The explicit initialization command above creates the ignored local
+coursework database for runtime verification. The Vue application implements the
+selected FocusBloom experience and the exact approved backend contracts.
 
 ## Technology and security boundary
 
