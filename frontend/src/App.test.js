@@ -76,6 +76,7 @@ function installApi({
       const output = perspectiveResult?.(body.scenario) ?? {
         alternatives: [{
           alternative: 'The fictional timing may be unrelated.',
+          scenario_anchor: 'A fictional',
           reasoning: 'The submitted scenario describes timing without establishing one cause.',
           missing_context: 'The submitted scenario does not include the reason for the event.',
         }],
@@ -222,7 +223,10 @@ describe('FocusBloom Vue experience', () => {
     await flushPromises()
     expect(wrapper.get('[data-state="perspective-evidence"]').text()).toContain('reviewed Alex demonstration')
     await wrapper.get('[data-state="perspective-evidence"] .primary').trigger('click')
-    expect(wrapper.get('[data-state="perspective-alt-ready"]').text()).toContain('Reviewed fictional example')
+    const reviewed = wrapper.get('[data-state="perspective-alt-ready"]')
+    expect(reviewed.text()).toContain('Reviewed fictional example')
+    expect(reviewed.text()).not.toContain('Based on text from your scenario')
+    expect(reviewed.text()).not.toContain('AI-generated draft — review before saving.')
     expect(globalThis.fetch.mock.calls.filter(([url]) => String(url).endsWith('/perspective/alternatives'))).toHaveLength(0)
   })
 
@@ -231,6 +235,7 @@ describe('FocusBloom Vue experience', () => {
       perspectiveResult: () => ({
         alternatives: [{
           alternative: 'The room may have been reserved for another activity.',
+          scenario_anchor: 'fictional study room changed',
           reasoning: 'The fictional note states that the room became unavailable.',
           missing_context: 'The note does not state who changed the room or why.',
         }],
@@ -259,11 +264,16 @@ describe('FocusBloom Vue experience', () => {
 
     const result = wrapper.get('[data-state="perspective-alt-ready"]')
     expect(result.text()).toContain('The room may have been reserved for another activity.')
+    expect(result.text()).toContain('Based on text from your scenario')
+    expect(result.text()).toContain('fictional study room changed')
     expect(result.text()).toContain('The fictional note states that the room became unavailable.')
     expect(result.text()).toContain('The note does not state who changed the room or why.')
     expect(result.text()).toContain('What scheduling detail would help compare the possibilities?')
     expect(result.text()).toContain('Coursework prototype; not therapy or medical advice.')
-    expect(result.text()).toContain('Gemini-generated draft')
+    expect(result.text()).toContain('AI-generated draft — review before saving.')
+    expect(result.text()).toContain('Structured output may still introduce assumptions. Compare every draft with your original scenario.')
+    expect(result.text()).toContain('Original fictional scenario')
+    expect(result.text()).toContain('The fictional study room changed before a meeting.')
     expect(globalThis.fetch.mock.calls.filter(([url, request]) => String(url).endsWith('/perspective-artifacts') && request?.method === 'POST')).toHaveLength(0)
   })
 
@@ -271,6 +281,7 @@ describe('FocusBloom Vue experience', () => {
     const resultFor = (scenario) => ({
       alternatives: [{
         alternative: scenario.includes('window') ? 'The window may have been opened for ventilation.' : 'The lamp may have been moved for another task.',
+        scenario_anchor: scenario.includes('window') ? 'fictional window' : 'fictional lamp',
         reasoning: scenario.includes('window') ? 'The scenario mentions an open window.' : 'The scenario mentions a moved lamp.',
         missing_context: 'The reason for the visible change is not stated.',
       }],
@@ -322,6 +333,8 @@ describe('FocusBloom Vue experience', () => {
     expect(fallback.text()).toContain('Reviewed fictional example')
     expect(fallback.text()).toContain('not an analysis of the submitted scenario')
     expect(fallback.text()).not.toMatch(/Alex|classmate left|idea was bad/i)
+    expect(fallback.text()).not.toContain('Based on text from your scenario')
+    expect(fallback.text()).not.toContain('AI-generated draft — review before saving.')
     expect(globalThis.fetch.mock.calls.filter(([url, request]) => String(url).endsWith('/perspective-artifacts') && request?.method === 'POST')).toHaveLength(0)
   })
 
@@ -374,6 +387,7 @@ describe('FocusBloom Vue experience', () => {
           alternatives: {
             alternatives: [{
               alternative: 'This late result must not appear.',
+              scenario_anchor: 'fictional room changed',
               reasoning: 'The delayed mocked response arrived after cancellation.',
               missing_context: 'It is stale.',
             }],

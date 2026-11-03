@@ -76,9 +76,12 @@ calms, treats, restores attention, or improves a user.
 The reviewed Alex Perspective demonstration uses zero provider requests. A
 custom Perspective scenario uses at most one request whose provider context is
 only the normalized fictional scenario. Its strict bounded JSON contains one or
-two alternatives, reasoning and missing context for each, one reflection
-question, and the exact coursework limitation. Unknown fields, unsafe text, and
-known unsubmitted Alex-demonstration details are rejected. There is no advice,
+two alternatives, a required exact scenario quotation, reasoning and missing
+context for each, one reflection question, and the exact coursework limitation.
+Unknown fields, unsafe text, and known unsubmitted Alex-demonstration details are
+rejected. The backend applies NFKC, whitespace collapse, and case folding and
+requires the normalized anchor to be a literal substring of the normalized
+scenario. There is no advice,
 automatic save, retry, or provider/model fallback. History RAG uses
 at most two requests: one SQL proposal followed by one grounded answer only when
 validated rows exist. The backend validates a deliberately small SELECT grammar,
@@ -198,3 +201,26 @@ This is coursework response-quality and control-flow evidence only. It does not
 establish therapy, diagnosis, crisis handling, clinical safety, attention,
 emotion, improvement, or effectiveness. Real screen-reader use, non-English
 scenarios, and long-term repeated use remain untested.
+
+## Prompt 14 grounding refinement
+
+Codex converted the Prompt 13 semantic-grounding finding into one deterministic
+control: every custom alternative requires a short `scenario_anchor` that must
+match the submitted scenario after NFKC normalization, whitespace collapsing,
+and case folding. Strict validation still rejects unknown/unsafe output, and an
+anchor mismatch ends the existing single attempt without another grounding
+call, retry, fallback, artifact, or Seed.
+
+Vue now displays the original scenario, exact anchor, **AI-generated draft —
+review before saving.**, and a warning to compare every draft with the original.
+It uses ordinary text interpolation. Static Alex and Continue-without-Gemini
+content remain reviewed and do not claim live anchoring.
+
+After the mocked regression passed, Codex made exactly one authorized live UI
+submission with the fictional presentation-order input. One request succeeded
+in one attempt; both alternatives returned the matching anchor `changed the
+presentation order`. No content was selected or saved automatically, browser
+warning/error logs were empty, and the disposable database had clean integrity,
+one lifecycle row, zero artifacts, and zero Seeds. The response still introduced
+tentative possibilities not proved by the anchor, confirming that quotation
+matching improves reviewability but does not establish complete grounding.

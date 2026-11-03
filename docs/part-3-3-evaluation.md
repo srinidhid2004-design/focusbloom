@@ -471,3 +471,28 @@ this checkpoint.
 
 No dependency, database schema, route, model, retry, fallback, Figma, voice/audio,
 submitted report, historical prompt, or `main` change was required.
+
+## Prompt 14 response to the grounding finding
+
+The surprising LIVE B result led to one deterministic refinement rather than a
+claim that semantic grounding had been solved. Every Gemini-generated custom
+alternative now requires a short `scenario_anchor`. NFKC-normalized,
+whitespace-collapsed, case-folded anchor text must be a literal substring of the
+equivalently normalized submitted scenario. An absent or paraphrased anchor is
+rejected after one attempt with no second grounding request, retry, fallback, or
+automatic save.
+
+The UI now shows the original scenario, exact anchor, **AI-generated draft —
+review before saving.**, and a warning that structured output may still
+introduce assumptions. Static reviewed paths do not claim anchoring.
+
+The one authorized Prompt 14 live UI submission reused LIVE B's fictional input.
+It made one provider request. Both alternatives returned the matching quotation
+`changed the presentation order`; the UI displayed the complete review boundary
+and saved nothing. The new output still proposed tentative time-constraint and
+topic-flow possibilities that the quotation did not establish. This confirms
+the intended limitation: an exact anchor helps comparison but does not prove
+that every generated statement is supported.
+
+The complete public-safe output and mocked/live separation are recorded in
+`docs/part-3-3-grounding-refinement.md`.

@@ -17,8 +17,9 @@ text, clicks, timing, completion, or history.
 
 ## Current milestone
 
-This feature branch implements the first Assignment 3.3 refinement on top of the
-approved Assignment 3.2 FocusBloom backend and Vue experience. It retains the
+This feature branch implements the penultimate Assignment 3.3 grounding
+refinement on top of the approved Assignment 3.2 FocusBloom backend and Vue
+experience. It retains the
 exact nine-table version-2 SQLite schema,
 22-operation `/api` surface, factual activity/session persistence, explicitly
 saved Perspective artifacts and Next-Step Seeds, ordered history conversations,
@@ -45,6 +46,8 @@ Authoritative active records:
 - [Product pivot](docs/focusbloom-pivot.md)
 - [Assignment 3.2 implementation contract](docs/part-3-2-implementation-plan.md)
 - [Assignment 3.3 refinement plan](docs/part-3-3-refinement-plan.md)
+- [Assignment 3.3 grounding refinement](docs/part-3-3-grounding-refinement.md)
+- [Assignment 3.3 recording plan](docs/part-3-3-recording-plan.md)
 - [Design pipeline](docs/design-pipeline.md)
 - [Support resources](docs/support-resources.md)
 - [Verification record](docs/verification.md)
@@ -86,9 +89,12 @@ The reviewed Alex example completes a pre-written demonstration without personal
 input or a provider request. A clearly separate custom path uses one optional
 fictional scenario field, shows the exact normalized scenario, and makes one
 bounded request only after an explicit Generate action. The strict result has
-one or two alternatives, per-alternative reasoning and missing context, one
-neutral reflection question, and the exact coursework limitation. Output is
-labeled **Gemini-generated draft**, not truth. Optional Perspective Lens uses a
+one or two alternatives, an exact scenario quotation, per-alternative reasoning
+and missing context, one neutral reflection question, and the exact coursework
+limitation. The backend requires the normalized quotation to be a literal
+substring of the normalized submitted scenario. Output is labeled
+**AI-generated draft — review before saving.** and warns that structured output
+may still introduce assumptions. Optional Perspective Lens uses a
 fictional observer. The user may continue without Gemini using accurately
 labeled neutral reviewed copy, and nothing is saved without explicit Save.
 
@@ -240,3 +246,13 @@ effectiveness evidence. The complete evaluation regression passed 84 backend
 tests and 28 frontend tests; dependency integrity, ESLint with zero warnings,
 and the production build also passed. Details are in
 [`docs/part-3-3-evaluation.md`](docs/part-3-3-evaluation.md).
+
+Prompt 14 responded with the required `scenario_anchor`, deterministic NFKC/
+whitespace/case-folded substring validation, and visible original-scenario,
+anchor, draft-label, and assumption-warning UI. Exactly one authorized live UI
+submission produced one succeeded attempt-count-1 request; both alternatives
+used the matching anchor `changed the presentation order`. Nothing was selected
+or saved automatically, browser warning/error logs were empty, and database
+integrity remained clean. The accepted result still proposed tentative details
+not proved by the quotation, so anchoring is a review aid rather than a complete
+grounding or safety guarantee.

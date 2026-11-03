@@ -641,3 +641,47 @@ in `docs/part-3-3-evaluation.md`; the curated authorization record is
 non-English input, and long-term repeated use remain untested. This is software
 and fictional response-quality evidence, not clinical/safety/effectiveness
 validation.
+
+## Assignment 3.3 grounding-refinement evidence — November 3, 2026
+
+### Mocked evidence
+
+The strict output model now requires a 1–120-character `scenario_anchor` for
+every generated custom alternative. Focused tests observed literal-substring
+acceptance after NFKC, whitespace collapsing, and case folding; they rejected
+absent text, paraphrases, empty/oversized anchors, unknown fields, and unsafe
+advice. Rejection made one fake request with no retry or fallback and created no
+artifact or Seed. SQLite inspection found no scenario/anchor column or text in
+model lifecycle storage.
+
+Stubbed Vue output displayed the original scenario, exact anchor, **AI-generated
+draft — review before saving.**, and the assumption warning. Static Alex and
+neutral fallback content did not claim anchoring. Generation still selected and
+saved nothing, while existing explicit Save/Delete, Prompt 13 scenario, Guide,
+Support, and continuous Focus tests remained green.
+
+### One-request live evidence
+
+One authorized fictional UI submission produced one provider request and one
+succeeded attempt-count-1 lifecycle row. Both alternatives used the validated
+anchor `changed the presentation order`. The UI visibly rendered the original
+scenario, anchors, warning, tentative alternatives, reasoning, missing context,
+question, and coursework limitation. Save remained unavailable until selection;
+nothing was automatically saved. Browser warning/error logs were empty.
+
+There was no diagnostic, retry, fallback, live Guide request, artifact, or Seed.
+Database integrity was `ok` with zero foreign-key violations. The accepted draft
+still offered tentative time-constraint and topic-flow possibilities not proved
+by the anchor. That remaining limitation is public evidence that quotation
+matching reduces one risk but does not prove complete grounding.
+
+### Verification result
+
+Focused counts were 32 Perspective/grounding, nine Prompt 13 scenarios, and 33
+Guide/instruction tests. The complete backend passed 93 with the same two known
+non-failing dependency warnings. `pip check` was clean; frontend tests passed 28;
+ESLint passed with zero warnings; and the build transformed 22 modules.
+
+Detailed implementation/live evidence is in
+`docs/part-3-3-grounding-refinement.md`. Public clean-checkout evidence is added
+only after the required post-push verification; it is not inferred here.

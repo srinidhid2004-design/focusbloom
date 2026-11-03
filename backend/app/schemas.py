@@ -143,6 +143,7 @@ class PerspectiveAlternativesRequest(StrictModel):
 
 class PerspectiveAlternative(StrictModel):
     alternative: str = Field(min_length=1, max_length=240)
+    scenario_anchor: str = Field(min_length=1, max_length=120)
     reasoning: str = Field(min_length=1, max_length=240)
     missing_context: str = Field(min_length=1, max_length=240)
 

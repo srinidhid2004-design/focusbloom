@@ -1269,3 +1269,58 @@ clinical, safety, or effectiveness conclusion.
 Real screen-reader operation, non-English inputs, and long-term repeated use
 remain untested. No Figma, dependency, schema, API-contract, historical report,
 historical prompt, or `main` change was part of this evaluation.
+
+## Assignment 3.3 grounding refinement — November 3, 2026
+
+### Deterministic contract checks
+
+`PerspectiveAlternative` now requires `scenario_anchor` with 1–120 characters.
+After strict output parsing, backend code applies Unicode NFKC, collapses
+whitespace, and case-folds both anchor and submitted scenario; the normalized
+anchor must be a literal substring. This accepts case/whitespace/compatibility
+differences but rejects absent text and paraphrases. The provider instruction
+names the exact four alternative keys, includes one matching example, and
+prohibits presenting invented scenario events as established facts.
+
+Mocked tests observed exact, case-insensitive, whitespace-collapsed, and NFKC
+matches; absent/paraphrased/empty/oversized/unknown/unsafe rejection; one attempt
+with no retry/fallback; no artifact/Seed write; and no scenario/anchor text or
+column in `model_requests`. Vue tests observed the exact anchor, original
+scenario, draft label, warning, and explicit-save boundary. Static Alex and
+Continue-without-Gemini paths made no live-anchor claim.
+
+### Single live application check
+
+Safe health reported service `ok`, schema version 2, temporary database
+available, and key status `configured` without a value. The fixed model, one SDK
+attempt, zero retry, no fallback, and ignored environment file were confirmed.
+
+Exactly one UI submission used the authorized fictional presentation-order
+scenario. It made exactly one provider request and succeeded in one attempt. Two
+alternatives each used the matching anchor `changed the presentation order`.
+The running UI displayed the anchor, original scenario, draft label, assumption
+warning, reasoning, missing context, reflection question, and limitation. It
+selected and saved nothing automatically. Browser warning/error logs were empty;
+no Garden Guide call or provider diagnostic occurred.
+
+The disposable database contained one succeeded Perspective lifecycle row with
+attempt count 1, zero artifacts, zero Seeds, `integrity_check=ok`, and zero
+foreign-key violations. It contained no scenario/anchor column. The validated
+draft still proposed tentative time-constraint and topic-flow details not proved
+by the quotation, so anchoring is not treated as complete semantic grounding.
+
+### Automated results before clean-checkout work
+
+| Check | Observed result |
+| --- | --- |
+| Focused Perspective/grounding | 32 passed; two known non-failing dependency warnings |
+| Prompt 13 scenario regression | 9 passed; same warnings |
+| Garden Guide/instruction regression | 33 passed; same warnings |
+| Complete backend | 93 passed; same warnings |
+| `pip check` | No broken requirements found |
+| Complete frontend | 28 passed across two files |
+| ESLint | Passed with zero warnings |
+| Production build | Passed; 22 modules transformed |
+
+Public clean-checkout verification follows only after the grounding commit is
+published. It is not claimed by this pre-commit section.

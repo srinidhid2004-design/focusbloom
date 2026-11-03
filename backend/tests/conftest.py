@@ -25,6 +25,7 @@ class FakeGateway:
         self.perspective_result: Any = PerspectiveAlternativesOutput(
             alternatives=[PerspectiveAlternative(
                 alternative="The visible facts could support more than one interpretation.",
+                scenario_anchor="fictional",
                 reasoning="The submitted scenario states an outcome but not a single cause.",
                 missing_context="The submitted scenario does not include the other relevant circumstances.",
             )],

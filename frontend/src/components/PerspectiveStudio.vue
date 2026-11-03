@@ -59,7 +59,7 @@ const savedArtifact = ref(null)
 const modelOutcome = ref('skipped')
 const requestPreview = computed(() => ({ scenario: interpretation.value }))
 const sourceLabel = computed(() => {
-  if (alternativeSource.value === 'gemini') return 'Gemini-generated draft'
+  if (alternativeSource.value === 'gemini') return 'AI-generated draft — review before saving.'
   if (alternativeSource.value === 'user') return 'User-authored alternative'
   return 'Reviewed fictional example.'
 })
@@ -527,12 +527,30 @@ async function leaveForHistory() {
         Compare alternatives
       </h1>
       <p>At most two bounded alternatives; none is advice, automatically saved, or described as true.</p>
+      <section
+        v-if="mode === 'custom'"
+        class="feature-card custom-scenario"
+      >
+        <h2>Original fictional scenario</h2>
+        <p>{{ interpretation }}</p>
+      </section>
+      <template v-if="alternativeSource === 'gemini'">
+        <p class="current-instruction">
+          <strong>AI-generated draft — review before saving.</strong>
+        </p>
+        <p class="caption">
+          Structured output may still introduce assumptions. Compare every draft with your original scenario.
+        </p>
+      </template>
       <article
         v-for="item in alternatives"
         :key="item.alternative"
         class="option-card alternative-card"
         :class="{ selected: selectedAlternative === item.alternative }"
       >
+        <p v-if="alternativeSource === 'gemini'">
+          <strong>Based on text from your scenario:</strong> “{{ item.scenario_anchor }}”
+        </p>
         <h2>{{ item.alternative }}</h2>
         <p><strong>Reasoning:</strong> {{ item.reasoning }}</p>
         <p><strong>Missing or uncertain context:</strong> {{ item.missing_context }}</p>

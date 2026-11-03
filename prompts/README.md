@@ -23,7 +23,9 @@ separates the provider-free reviewed Alex demonstration from a one-field custom
 fictional route. Prompt 13 then evaluates 15 fictional scenarios with mocks and
 makes exactly four authorized live Perspective submissions for repeated/different
 scenario variation. No live Garden Guide call, automatic save, retry, fallback,
-or historical-evidence change occurs.
+or historical-evidence change occurs. Prompt 14 responds to the observed
+grounding gap with a deterministic exact anchor, visible AI-draft warning, one
+bounded live UI check, public clean-checkout verification, and a recording plan.
 
 ## Redaction and safety rules
 
@@ -54,9 +56,10 @@ or historical-evidence change occurs.
 | [`11-final-assignment-report.md`](11-final-assignment-report.md) | 2026-10-29 | Create the Canvas-ready Part 3.2 report, reverify official Support sources, run final regression, and publish through the authorized feature/merge workflow | Seven official sources manually confirmed; complete suites and repository audits passed; final report and continuity records prepared without provider or runtime-database access |
 | [`12-part-3-3-dynamic-perspective.md`](12-part-3-3-dynamic-perspective.md) | 2026-11-02 | Separate the reviewed Alex demonstration from a genuinely dynamic one-field custom Perspective route and finish the looping Focus Garden refinement | Strict scenario-only request and richer bounded response, neutral failure fallback, explicit save/Seed boundary, moving Focus rounds, and complete mocked regression; no live provider, runtime database, credential, dependency, schema, Figma, report, or main change |
 | [`13-part-3-3-scenario-evaluation.md`](13-part-3-3-scenario-evaluation.md) | 2026-11-02 | Evaluate 15 fictional scenarios and compare bounded live variation without changing the product contract | Mocked cross-case controls passed; exactly four live Perspective requests varied repeated/different scenarios with no retry, fallback, automatic save, or live Garden Guide call; semantic-grounding and screen-reader limitations recorded |
+| [`14-grounding-clean-checkout-recording-plan.md`](14-grounding-clean-checkout-recording-plan.md) | 2026-11-03 | Add deterministic scenario anchoring and visible review warnings, verify one bounded live result, prove public setup, and plan the final course screencast | Anchor validation/UI and one-request live check passed without automatic save; public clean-checkout work follows the required feature-branch commit |
 
 ## Future numbering
 
 Use two-digit sequential names with a short purpose, such as
-`14-next-approved-checkpoint.md`. Add one index row per curated prompt record.
+`15-next-approved-checkpoint.md`. Add one index row per curated prompt record.
 Prompt records are curated evidence, not full chat exports.
