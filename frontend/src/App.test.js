@@ -19,7 +19,7 @@ function json(body, status = 200) {
   }))
 }
 
-function installApi({ noMotion = false, modelFailure = false, populated = false } = {}) {
+function installApi({ noMotion = false, modelFailure = false, populated = false, perspectiveResult = null } = {}) {
   const session = {
     session_id: 'session-1',
     activity_type: 'different_leaf',
@@ -61,7 +61,16 @@ function installApi({ noMotion = false, modelFailure = false, populated = false 
     if (path.includes('/next-step-seeds?')) return json({ outcome: 'success', seeds: [], next_cursor: null })
     if (path.endsWith('/perspective/alternatives')) {
       if (modelFailure) return json({ outcome: 'missing_configuration', message: 'Gemini is not configured.' }, 503)
-      return json({ outcome: 'success', request: { attempt_count: 1 }, alternatives: { alternatives: [{ alternative: 'The timing may be unrelated.', factual_basis: 'No reason is provided.' }], limitation: 'Coursework prototype; not therapy or medical advice.' }, saved: false })
+      const output = perspectiveResult?.(body.scenario) ?? {
+        alternatives: [{
+          alternative: 'The fictional timing may be unrelated.',
+          reasoning: 'The submitted scenario describes timing without establishing one cause.',
+          missing_context: 'The submitted scenario does not include the reason for the event.',
+        }],
+        reflection_question: 'What other factual context would help compare the possibilities?',
+        limitation: 'Coursework prototype; not therapy or medical advice.',
+      }
+      return json({ outcome: 'success', request: { attempt_count: 1 }, alternatives: output, saved: false })
     }
     if (path.endsWith('/perspective-artifacts') && method === 'POST') return json({ outcome: 'success', artifact: { artifact_id: 'artifact-1', ...body } }, 201)
     if (path.endsWith('/next-step-seeds') && method === 'POST') return json({ outcome: 'success', seed: { seed_id: 'seed-1', ...body } }, 201)
@@ -97,22 +106,60 @@ describe('FocusBloom Vue experience', () => {
     wrapper.unmount()
   })
 
-  it('starts one no-typing activity in one action, allows neutral retry, and completes once', async () => {
+  it('keeps the activity active, moves the correct option each round, and ends only on Stop', async () => {
     const wrapper = mount(App)
     await flushPromises()
     await wrapper.get('.entry-view .primary').trigger('click')
     await flushPromises()
     expect(wrapper.get('[data-state="focus-active"] h1').text()).toContain('differently shaped leaf')
 
-    const options = wrapper.findAll('.activity-option')
+    let options = wrapper.findAll('.activity-option')
+    expect(options.findIndex((option) => option.text().includes('Pointed leaf'))).toBe(1)
     await options[0].trigger('click')
     await flushPromises()
     expect(wrapper.text()).toContain('Try again')
     await options[1].trigger('click')
     await flushPromises()
-    expect(wrapper.get('[data-state="focus-completed"]').text()).toContain('Completed')
+    expect(wrapper.get('[data-state="focus-active"]').text()).toContain('A new round is ready')
+    options = wrapper.findAll('.activity-option')
+    expect(options.findIndex((option) => option.text().includes('Pointed leaf'))).toBe(2)
+    await options[2].trigger('click')
+    await flushPromises()
+    expect(wrapper.get('[data-state="focus-active"]').exists()).toBe(true)
+    options = wrapper.findAll('.activity-option')
+    expect(options.findIndex((option) => option.text().includes('Pointed leaf'))).toBe(0)
+    expect(globalThis.fetch.mock.calls.filter(([, request]) => request?.method === 'PATCH')).toHaveLength(0)
+    await wrapper.findAll('.controls-row .secondary')[0].trigger('click')
+    await flushPromises()
+    expect(wrapper.get('.hint').text()).toBe('The pointed leaf has a diamond shape.')
+    expect(wrapper.get('.hint').text()).not.toMatch(/center|middle/i)
+    await wrapper.get('.button.stop').trigger('click')
+    await flushPromises()
+    expect(wrapper.get('[data-state="focus-stopped"]').text()).toContain('stopped')
     const patches = globalThis.fetch.mock.calls.filter(([, request]) => request?.method === 'PATCH')
     expect(patches).toHaveLength(1)
+    expect(JSON.parse(patches[0][1].body).action).toBe('stop')
+    const eventTypes = globalThis.fetch.mock.calls
+      .filter(([url, request]) => String(url).includes('/events') && request?.method === 'POST')
+      .map(([, request]) => JSON.parse(request.body).event_type)
+    expect(eventTypes).not.toContain('completed')
+  })
+
+  it('lets Skip end an active Focus Garden without a score or automatic completion', async () => {
+    const wrapper = mount(App)
+    await flushPromises()
+    await wrapper.get('.entry-view .primary').trigger('click')
+    await flushPromises()
+    await wrapper.findAll('.controls-row .secondary')[1].trigger('click')
+    await flushPromises()
+    expect(wrapper.get('[data-state="focus-stopped"]').text()).toContain('skipped without a score or penalty')
+    const patches = globalThis.fetch.mock.calls.filter(([, request]) => request?.method === 'PATCH')
+    expect(JSON.parse(patches[0][1].body).action).toBe('skip')
+    const eventTypes = globalThis.fetch.mock.calls
+      .filter(([url, request]) => String(url).includes('/events') && request?.method === 'POST')
+      .map(([, request]) => JSON.parse(request.body).event_type)
+    expect(eventTypes).toContain('skipped')
+    expect(eventTypes).not.toContain('completed')
   })
 
   it('makes every approved no-typing activity reachable while retaining the default start', async () => {
@@ -146,19 +193,149 @@ describe('FocusBloom Vue experience', () => {
     expect(wrapper.get('[data-state="focus-stopped"]').text()).toContain('interrupted')
   })
 
-  it('preserves Perspective work through a missing-configuration outcome and continues without Gemini', async () => {
+  it('keeps the reviewed fictional demonstration distinct and makes no Gemini request', async () => {
+    const wrapper = mount(App)
+    await flushPromises()
+    await wrapper.findAll('.entry-view .secondary')[0].trigger('click')
+    await flushPromises()
+    expect(wrapper.get('[data-state="perspective-entry"]').text()).toContain('Reviewed fictional demonstration')
+    await wrapper.get('[data-state="perspective-entry"] .primary').trigger('click')
+    await flushPromises()
+    expect(wrapper.get('[data-state="perspective-evidence"]').text()).toContain('reviewed Alex demonstration')
+    await wrapper.get('[data-state="perspective-evidence"] .primary').trigger('click')
+    expect(wrapper.get('[data-state="perspective-alt-ready"]').text()).toContain('Reviewed fictional example')
+    expect(globalThis.fetch.mock.calls.filter(([url]) => String(url).endsWith('/perspective/alternatives'))).toHaveLength(0)
+  })
+
+  it('submits only the normalized custom scenario and displays the complete bounded draft', async () => {
+    installApi({
+      perspectiveResult: () => ({
+        alternatives: [{
+          alternative: 'The room may have been reserved for another activity.',
+          reasoning: 'The fictional note states that the room became unavailable.',
+          missing_context: 'The note does not state who changed the room or why.',
+        }],
+        reflection_question: 'What scheduling detail would help compare the possibilities?',
+        limitation: 'Coursework prototype; not therapy or medical advice.',
+      }),
+    })
+    const wrapper = mount(App)
+    await flushPromises()
+    await wrapper.findAll('.entry-view .secondary')[0].trigger('click')
+    await flushPromises()
+    await wrapper.get('#custom-interpretation').setValue('  The fictional study room changed before a meeting.  ')
+    await wrapper.get('.custom-entry .secondary').trigger('click')
+    await flushPromises()
+    const preview = wrapper.get('[data-state="perspective-evidence"]')
+    expect(preview.text()).toContain('The fictional study room changed before a meeting.')
+    expect(preview.text()).not.toMatch(/Alex|classmate left|idea was bad/i)
+    await preview.get('.primary').trigger('click')
+    await flushPromises()
+
+    const requestCall = globalThis.fetch.mock.calls.find(([url]) => String(url).endsWith('/perspective/alternatives'))
+    const requestBody = JSON.parse(requestCall[1].body)
+    expect(requestBody.scenario).toBe('The fictional study room changed before a meeting.')
+    expect(Object.keys(requestBody).sort()).toEqual(['idempotency_key', 'scenario'])
+    expect(JSON.stringify(requestBody)).not.toMatch(/Alex|classmate|idea was bad/i)
+
+    const result = wrapper.get('[data-state="perspective-alt-ready"]')
+    expect(result.text()).toContain('The room may have been reserved for another activity.')
+    expect(result.text()).toContain('The fictional note states that the room became unavailable.')
+    expect(result.text()).toContain('The note does not state who changed the room or why.')
+    expect(result.text()).toContain('What scheduling detail would help compare the possibilities?')
+    expect(result.text()).toContain('Coursework prototype; not therapy or medical advice.')
+    expect(result.text()).toContain('Gemini-generated draft')
+    expect(globalThis.fetch.mock.calls.filter(([url, request]) => String(url).endsWith('/perspective-artifacts') && request?.method === 'POST')).toHaveLength(0)
+  })
+
+  it('displays different mocked drafts for two different custom scenarios', async () => {
+    const resultFor = (scenario) => ({
+      alternatives: [{
+        alternative: scenario.includes('window') ? 'The window may have been opened for ventilation.' : 'The lamp may have been moved for another task.',
+        reasoning: scenario.includes('window') ? 'The scenario mentions an open window.' : 'The scenario mentions a moved lamp.',
+        missing_context: 'The reason for the visible change is not stated.',
+      }],
+      reflection_question: 'What additional fact would distinguish these possibilities?',
+      limitation: 'Coursework prototype; not therapy or medical advice.',
+    })
+
+    async function runScenario(scenario) {
+      installApi({ perspectiveResult: resultFor })
+      const wrapper = mount(App)
+      await flushPromises()
+      await wrapper.findAll('.entry-view .secondary')[0].trigger('click')
+      await flushPromises()
+      await wrapper.get('#custom-interpretation').setValue(scenario)
+      await wrapper.get('.custom-entry .secondary').trigger('click')
+      await flushPromises()
+      await wrapper.get('[data-state="perspective-evidence"] .primary').trigger('click')
+      await flushPromises()
+      const text = wrapper.get('[data-state="perspective-alt-ready"]').text()
+      wrapper.unmount()
+      return text
+    }
+
+    const windowResult = await runScenario('A fictional window was open after the break.')
+    const lampResult = await runScenario('A fictional lamp was moved before the workshop.')
+    expect(windowResult).toContain('opened for ventilation')
+    expect(windowResult).not.toContain('moved for another task')
+    expect(lampResult).toContain('moved for another task')
+    expect(lampResult).not.toContain('opened for ventilation')
+  })
+
+  it('preserves custom Perspective work through failure and labels neutral fallback accurately', async () => {
     installApi({ modelFailure: true })
     const wrapper = mount(App)
     await flushPromises()
     await wrapper.findAll('.entry-view .secondary')[0].trigger('click')
-    await wrapper.get('[data-state="perspective-entry"] .primary').trigger('click')
+    await flushPromises()
+    await wrapper.get('#custom-interpretation').setValue('A fictional project note was moved to another folder.')
+    await wrapper.get('.custom-entry .secondary').trigger('click')
     await flushPromises()
     await wrapper.get('[data-state="perspective-evidence"] .primary').trigger('click')
     await flushPromises()
     expect(wrapper.get('[data-state="perspective-model-failed"]').text()).toContain('not configured')
     expect(wrapper.text()).toContain('Your work is still here')
+    expect(wrapper.text()).toContain('A fictional project note was moved to another folder.')
+    expect(globalThis.fetch.mock.calls.filter(([url]) => String(url).endsWith('/perspective/alternatives'))).toHaveLength(1)
     await wrapper.get('[data-state="perspective-model-failed"] .primary').trigger('click')
-    expect(wrapper.get('[data-state="perspective-alt-ready"]').text()).toContain('Compare alternatives')
+    const fallback = wrapper.get('[data-state="perspective-alt-ready"]')
+    expect(fallback.text()).toContain('Reviewed fictional example')
+    expect(fallback.text()).toContain('not an analysis of the submitted scenario')
+    expect(fallback.text()).not.toMatch(/Alex|classmate left|idea was bad/i)
+    expect(globalThis.fetch.mock.calls.filter(([url, request]) => String(url).endsWith('/perspective-artifacts') && request?.method === 'POST')).toHaveLength(0)
+  })
+
+  it('keeps the Next-Step Seed user-authored behind preview and explicit Save', async () => {
+    const wrapper = mount(App)
+    await flushPromises()
+    await wrapper.findAll('.entry-view .secondary')[0].trigger('click')
+    await flushPromises()
+    await wrapper.get('#custom-interpretation').setValue('A fictional task changed before a workshop.')
+    await wrapper.get('.custom-entry .secondary').trigger('click')
+    await flushPromises()
+    await wrapper.get('[data-state="perspective-evidence"] .primary').trigger('click')
+    await flushPromises()
+    await wrapper.get('.alternative-card .button').trigger('click')
+    const seedButton = wrapper.findAll('[data-state="perspective-alt-ready"] button')
+      .find((button) => button.text().includes('Continue to optional Next-Step Seed'))
+    await seedButton.trigger('click')
+    await flushPromises()
+
+    const inputs = wrapper.findAll('.seed-builder input')
+    await inputs[0].setValue('a fictional workshop detail changes')
+    await inputs[1].setValue('review the written instructions')
+    expect(globalThis.fetch.mock.calls.filter(([url, request]) => String(url).endsWith('/next-step-seeds') && request?.method === 'POST')).toHaveLength(0)
+    await wrapper.get('[data-state="next-step-seed"] .secondary.full-width').trigger('click')
+    expect(wrapper.get('.preview-card').text()).toContain('If a fictional workshop detail changes, then I will review the written instructions.')
+    expect(globalThis.fetch.mock.calls.filter(([url, request]) => String(url).endsWith('/next-step-seeds') && request?.method === 'POST')).toHaveLength(0)
+    await wrapper.get('[data-state="next-step-seed"] .primary').trigger('click')
+    await flushPromises()
+    const saveCall = globalThis.fetch.mock.calls.find(([url, request]) => String(url).endsWith('/next-step-seeds') && request?.method === 'POST')
+    const saveBody = JSON.parse(saveCall[1].body)
+    expect(saveBody.situation_text).toBe('a fictional workshop detail changes')
+    expect(saveBody.action_text).toBe('review the written instructions')
+    expect(saveBody.source).toBe('template')
   })
 
   it('shows factual populated history and a no-match Garden Guide outcome without an invented answer', async () => {

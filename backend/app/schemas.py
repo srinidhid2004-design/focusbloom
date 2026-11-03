@@ -138,25 +138,18 @@ class ActivityEventCreate(StrictModel):
 
 class PerspectiveAlternativesRequest(StrictModel):
     idempotency_key: UUID
-    interpretation: str = Field(min_length=1, max_length=280)
-    supporting_evidence: list[str] = Field(default_factory=list, max_length=3)
-    uncertainty: list[str] = Field(default_factory=list, max_length=3)
-    observer_mode: Literal["none", "fictional_alex"]
-
-    @model_validator(mode="after")
-    def validate_cards(self) -> "PerspectiveAlternativesRequest":
-        if any(not card or len(card) > 180 for card in self.supporting_evidence + self.uncertainty):
-            raise ValueError("evidence cards must contain 1 to 180 characters")
-        return self
+    scenario: str = Field(min_length=1, max_length=280)
 
 
 class PerspectiveAlternative(StrictModel):
     alternative: str = Field(min_length=1, max_length=240)
-    factual_basis: str = Field(min_length=1, max_length=180)
+    reasoning: str = Field(min_length=1, max_length=240)
+    missing_context: str = Field(min_length=1, max_length=240)
 
 
 class PerspectiveAlternativesOutput(StrictModel):
     alternatives: list[PerspectiveAlternative] = Field(min_length=1, max_length=2)
+    reflection_question: str = Field(min_length=1, max_length=180)
     limitation: Literal["Coursework prototype; not therapy or medical advice."]
 
 

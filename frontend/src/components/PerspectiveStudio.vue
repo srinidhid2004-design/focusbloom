@@ -3,16 +3,48 @@ import { computed, ref } from 'vue'
 import { api, newId, utcNow } from '../services/api.js'
 import { useLatestRequest } from '../composables/useLatestRequest.js'
 
+const REVIEWED_INTERPRETATION = 'A fictional classmate left because Alex’s idea was bad.'
+const REVIEWED_SUPPORTING = ['A classmate left soon after Alex spoke.']
+const REVIEWED_UNCERTAINTY = ['The reason for leaving is unknown.', 'Timing alone does not establish cause.']
+const LIMITATION = 'Coursework prototype; not therapy or medical advice.'
+const REVIEWED_RESULT = {
+  alternatives: [
+    {
+      alternative: 'They may have needed to leave.',
+      reasoning: 'The reviewed scenario states only that the classmate left after Alex spoke.',
+      missing_context: 'The reviewed scenario does not state why the classmate left.',
+    },
+    {
+      alternative: 'The timing may be unrelated.',
+      reasoning: 'Two events occurring close together does not establish that one caused the other.',
+      missing_context: 'The reviewed scenario does not include the classmate’s reason or other circumstances.',
+    },
+  ],
+  reflection_question: 'What other factual context would be needed before choosing an interpretation?',
+  limitation: LIMITATION,
+}
+const NEUTRAL_FALLBACK = {
+  alternatives: [{
+    alternative: 'The fictional scenario may allow more than one interpretation.',
+    reasoning: 'This is general reviewed coursework copy, not an analysis of the submitted scenario.',
+    missing_context: 'No scenario-specific missing context was generated without Gemini.',
+  }],
+  reflection_question: 'What additional factual context would be needed before choosing an interpretation?',
+  limitation: LIMITATION,
+}
+
 const props = defineProps({ preferences: { type: Object, required: true } })
 const emit = defineEmits(['state', 'seed', 'history', 'entry'])
 const requestGuard = useLatestRequest()
 const state = ref('perspective-entry')
 const mode = ref('fictional')
-const interpretation = ref('A fictional classmate left because Alex’s idea was bad.')
+const interpretation = ref(REVIEWED_INTERPRETATION)
 const customText = ref('')
-const supporting = ref(['A classmate left soon after Alex spoke.'])
-const uncertainty = ref(['The reason for leaving is unknown.', 'Timing alone does not establish cause.'])
+const supporting = ref([...REVIEWED_SUPPORTING])
+const uncertainty = ref([...REVIEWED_UNCERTAINTY])
 const alternatives = ref([])
+const reflectionQuestion = ref('')
+const limitation = ref(LIMITATION)
 const selectedAlternative = ref('')
 const alternativeSource = ref('fictional_example')
 const editMode = ref(false)
@@ -25,14 +57,15 @@ const busy = ref(false)
 const error = ref('')
 const savedArtifact = ref(null)
 const modelOutcome = ref('skipped')
-const requestPreview = computed(() => ({
-  interpretation: interpretation.value,
-  supporting_evidence: supporting.value,
-  uncertainty: uncertainty.value,
-  observer_mode: observerMode.value,
-}))
+const requestPreview = computed(() => ({ scenario: interpretation.value }))
+const sourceLabel = computed(() => {
+  if (alternativeSource.value === 'gemini') return 'Gemini-generated draft'
+  if (alternativeSource.value === 'user') return 'User-authored alternative'
+  return 'Reviewed fictional example.'
+})
 
 function setState(next) { state.value = next; emit('state', next) }
+
 async function recordStep(step, type = 'perspective_step') {
   if (!session.value) return
   ordinal.value += 1
@@ -43,14 +76,40 @@ async function recordStep(step, type = 'perspective_step') {
   })
 }
 
+function resetReviewState() {
+  alternatives.value = []
+  reflectionQuestion.value = ''
+  limitation.value = LIMITATION
+  selectedAlternative.value = ''
+  alternativeSource.value = 'fictional_example'
+  editMode.value = false
+  observerMode.value = 'none'
+  savedArtifact.value = null
+  modelOutcome.value = 'skipped'
+  ordinal.value = 0
+}
+
 async function begin(selectedMode) {
   if (busy.value) return
   mode.value = selectedMode
+  resetReviewState()
   if (selectedMode === 'custom') {
-    if (!customText.value.trim()) return
-    interpretation.value = customText.value.trim()
+    const normalized = customText.value.trim()
+    if (!normalized) return
+    customText.value = normalized
+    interpretation.value = normalized
+    supporting.value = []
+    uncertainty.value = []
+    observerLabel.value = 'Fictional observer'
+  } else {
+    interpretation.value = REVIEWED_INTERPRETATION
+    supporting.value = [...REVIEWED_SUPPORTING]
+    uncertainty.value = [...REVIEWED_UNCERTAINTY]
+    observerLabel.value = 'Alex'
   }
-  busy.value = true; error.value = ''; startedAt.value = Date.now()
+  busy.value = true
+  error.value = ''
+  startedAt.value = Date.now()
   try {
     const result = await api.createSession({
       client_session_id: newId(), activity_type: 'perspective_studio', started_at: utcNow(),
@@ -70,13 +129,27 @@ function toggleCard(list, text) {
   else if (list.length < 3) list.push(text)
 }
 
+function applyResult(result, source, outcome) {
+  alternatives.value = result.alternatives
+  reflectionQuestion.value = result.reflection_question
+  limitation.value = result.limitation
+  alternativeSource.value = source
+  modelOutcome.value = outcome
+  setState('perspective-alt-ready')
+}
+
 async function requestAlternatives() {
-  if (busy.value) return
+  if (busy.value || mode.value !== 'custom') return
   const guard = requestGuard.begin()
-  busy.value = true; error.value = ''; setState('perspective-alt-loading')
+  busy.value = true
+  error.value = ''
+  setState('perspective-alt-loading')
   try {
     await recordStep('alternatives-requested')
-    const result = await api.perspectiveAlternatives({ idempotency_key: newId(), ...requestPreview.value }, guard.signal)
+    const result = await api.perspectiveAlternatives({
+      idempotency_key: newId(),
+      ...requestPreview.value,
+    }, guard.signal)
     if (!requestGuard.isCurrent(guard.id)) return
     if (result.outcome === 'duplicate_request' && !result.alternatives) {
       error.value = 'This request was already received. No duplicate alternative was added.'
@@ -84,16 +157,15 @@ async function requestAlternatives() {
       setState('perspective-model-failed')
       return
     }
-    alternatives.value = result.alternatives.alternatives
-    modelOutcome.value = 'succeeded'
-    alternativeSource.value = 'gemini'
-    setState('perspective-alt-ready')
+    applyResult(result.alternatives, 'gemini', 'succeeded')
   } catch (caught) {
     if (caught.name === 'AbortError' || !requestGuard.isCurrent(guard.id)) return
     modelOutcome.value = caught.outcome ?? 'model_failure'
     error.value = modelMessage(modelOutcome.value)
     setState('perspective-model-failed')
-  } finally { if (requestGuard.isCurrent(guard.id)) busy.value = false }
+  } finally {
+    if (requestGuard.isCurrent(guard.id)) busy.value = false
+  }
 }
 
 function modelMessage(outcome) {
@@ -115,13 +187,7 @@ function modelMessage(outcome) {
 function continueWithoutModel() {
   requestGuard.cancel()
   busy.value = false
-  alternatives.value = [
-    { alternative: 'They may have needed to leave.', factual_basis: 'The fictional scenario does not give a reason for leaving.' },
-    { alternative: 'The timing may be unrelated.', factual_basis: 'Events occurring together do not establish cause.' },
-  ]
-  alternativeSource.value = 'fictional_example'
-  modelOutcome.value = 'skipped'
-  setState('perspective-alt-ready')
+  applyResult(mode.value === 'fictional' ? REVIEWED_RESULT : NEUTRAL_FALLBACK, 'fictional_example', 'skipped')
 }
 
 function selectAlternative(item) {
@@ -137,12 +203,15 @@ function createOwn() {
 
 function useLens() {
   observerMode.value = 'fictional_alex'
-  if (!selectedAlternative.value) selectedAlternative.value = `${observerLabel.value || 'Alex'} may not have all relevant context.`
+  if (!selectedAlternative.value) {
+    selectedAlternative.value = `${observerLabel.value || 'Fictional observer'} may not have all relevant context.`
+  }
 }
 
 async function saveArtifact() {
   if (busy.value || !selectedAlternative.value.trim()) return
-  busy.value = true; error.value = ''
+  busy.value = true
+  error.value = ''
   try {
     const result = await api.createArtifact({
       client_artifact_id: newId(), session_id: session.value?.session_id ?? null,
@@ -155,7 +224,8 @@ async function saveArtifact() {
     const terminal = await api.updateSession(session.value.session_id, {
       action: 'complete', expected_version: session.value.version, idempotency_key: newId(),
       ended_at: utcNow(), duration_ms: Date.now() - startedAt.value,
-      perspective_progress: 'reviewed', model_status: modelOutcome.value === 'succeeded' ? 'succeeded' : modelOutcome.value === 'skipped' ? 'skipped' : 'failed',
+      perspective_progress: 'reviewed',
+      model_status: modelOutcome.value === 'succeeded' ? 'succeeded' : 'skipped',
     })
     session.value = terminal.session
   } catch (caught) { error.value = `${caught.message} Nothing is shown as saved.` }
@@ -188,6 +258,16 @@ async function terminalize(action, progress) {
     model_status: terminalModelStatus(),
   })
   session.value = result.session
+}
+
+async function stopAndReturn() {
+  requestGuard.cancel()
+  busy.value = true
+  try {
+    await terminalize('stop', selectedAlternative.value.trim() ? 'reviewed' : 'alternative')
+    emit('entry')
+  } catch (caught) { error.value = `${caught.message} The Perspective session was not shown as ended.` }
+  finally { busy.value = false }
 }
 
 async function leaveForSeed() {
@@ -228,10 +308,10 @@ async function leaveForHistory() {
       </h1>
       <p>Review one interpretation without turning uncertainty into a conclusion. This is coursework, not therapy or advice.</p>
       <section class="feature-card">
-        <h2>Lowest-effort path</h2>
+        <h2>Reviewed fictional demonstration</h2>
         <p><strong>“They left because my idea was bad.”</strong></p>
         <p class="caption">
-          Fictional Alex scenario · no personal information required.
+          Pre-written Alex scenario · no input or Gemini request required.
         </p>
       </section>
       <button
@@ -240,11 +320,11 @@ async function leaveForHistory() {
         :disabled="busy"
         @click="begin('fictional')"
       >
-        Try a fictional example
+        View reviewed fictional example
       </button>
       <details class="custom-entry">
-        <summary>Write a fictional example (optional)</summary>
-        <label for="custom-interpretation">One short initial interpretation</label>
+        <summary>Write a fictional scenario (optional)</summary>
+        <label for="custom-interpretation">One short fictional scenario</label>
         <textarea
           id="custom-interpretation"
           v-model="customText"
@@ -253,7 +333,7 @@ async function leaveForHistory() {
           placeholder="A fictional coursework scenario"
         />
         <p class="caption">
-          {{ customText.length }}/280 · Do not enter private, medical, identifying, or crisis information.
+          {{ customText.length }}/280 · Do not enter identifying, medical, crisis, or other private information.
         </p>
         <button
           class="button secondary"
@@ -261,7 +341,7 @@ async function leaveForHistory() {
           :disabled="!customText.trim() || busy"
           @click="begin('custom')"
         >
-          Use this fictional text
+          Review custom request
         </button>
       </details>
       <p>Unsaved text stays in browser memory only and may reset on refresh.</p>
@@ -281,56 +361,86 @@ async function leaveForHistory() {
         data-view-heading
         tabindex="-1"
       >
-        Review evidence and uncertainty
+        {{ mode === 'fictional' ? 'Review the pre-written example' : 'Review the custom request' }}
       </h1>
-      <p class="current-instruction">
-        Select what is visible and what the scenario does not establish.
-      </p>
-      <h2>What appears to support it?</h2>
+
+      <template v-if="mode === 'fictional'">
+        <p class="current-instruction">
+          These evidence and uncertainty cards belong only to the reviewed Alex demonstration.
+        </p>
+        <h2>What appears to support it?</h2>
+        <button
+          class="option-card selected"
+          type="button"
+          :aria-pressed="supporting.includes('A classmate left soon after Alex spoke.')"
+          @click="toggleCard(supporting, 'A classmate left soon after Alex spoke.')"
+        >
+          <strong>A classmate left soon after Alex spoke</strong><small>The timing is visible in the fictional scenario.</small>
+        </button>
+        <h2>What does not establish it?</h2>
+        <button
+          class="option-card selected"
+          type="button"
+          :aria-pressed="uncertainty.includes('The reason for leaving is unknown.')"
+          @click="toggleCard(uncertainty, 'The reason for leaving is unknown.')"
+        >
+          <strong>The reason for leaving is unknown</strong><small>Timing alone does not establish why someone left.</small>
+        </button>
+        <button
+          class="option-card"
+          type="button"
+          :aria-pressed="uncertainty.includes('Timing alone does not establish cause.')"
+          @click="toggleCard(uncertainty, 'Timing alone does not establish cause.')"
+        >
+          <strong>Timing is not a stated reason</strong><small>Events occurring together do not establish cause.</small>
+        </button>
+        <button
+          class="button primary full-width"
+          type="button"
+          @click="continueWithoutModel"
+        >
+          View reviewed alternatives
+        </button>
+      </template>
+
+      <template v-else>
+        <p class="current-instruction">
+          Only the normalized fictional scenario below will be sent. No reviewed demonstration detail is inserted.
+        </p>
+        <section class="feature-card custom-scenario">
+          <h2>Fictional scenario</h2>
+          <p>{{ interpretation }}</p>
+        </section>
+        <details
+          class="request-preview"
+          open
+        >
+          <summary>Review exactly what Gemini would receive</summary>
+          <dl class="fact-list compact">
+            <div><dt>Scenario</dt><dd>{{ requestPreview.scenario }}</dd></div>
+          </dl>
+        </details>
+        <button
+          class="button primary full-width"
+          type="button"
+          @click="requestAlternatives"
+        >
+          Generate up to two draft alternatives
+        </button>
+        <button
+          class="button secondary full-width"
+          type="button"
+          @click="continueWithoutModel"
+        >
+          Continue without Gemini
+        </button>
+      </template>
       <button
-        class="option-card selected"
+        class="text-button"
         type="button"
-        aria-pressed="true"
-        @click="toggleCard(supporting, 'A classmate left soon after Alex spoke.')"
+        @click="stopAndReturn"
       >
-        <strong>A classmate left soon after Alex spoke</strong><small>The timing is visible in the fictional scenario.</small>
-      </button>
-      <h2>What does not establish it?</h2>
-      <button
-        class="option-card selected"
-        type="button"
-        :aria-pressed="uncertainty.includes('The reason for leaving is unknown.')"
-        @click="toggleCard(uncertainty, 'The reason for leaving is unknown.')"
-      >
-        <strong>The reason for leaving is unknown</strong><small>Timing alone does not establish why someone left.</small>
-      </button>
-      <button
-        class="option-card"
-        type="button"
-        :aria-pressed="uncertainty.includes('Timing alone does not establish cause.')"
-        @click="toggleCard(uncertainty, 'Timing alone does not establish cause.')"
-      >
-        <strong>Timing is not a stated reason</strong><small>Events occurring together do not establish cause.</small>
-      </button>
-      <details class="request-preview">
-        <summary>Review exactly what Gemini would receive</summary>
-        <dl class="fact-list compact">
-          <div><dt>Interpretation</dt><dd>{{ interpretation }}</dd></div><div><dt>Supporting evidence</dt><dd>{{ supporting.join(' · ') || 'None selected' }}</dd></div><div><dt>Uncertainty</dt><dd>{{ uncertainty.join(' · ') || 'None selected' }}</dd></div>
-        </dl>
-      </details>
-      <button
-        class="button primary full-width"
-        type="button"
-        @click="requestAlternatives"
-      >
-        Request up to two alternatives
-      </button>
-      <button
-        class="button secondary full-width"
-        type="button"
-        @click="continueWithoutModel"
-      >
-        Skip Gemini and continue
+        Stop and go back
       </button>
     </template>
 
@@ -344,7 +454,10 @@ async function leaveForHistory() {
         Requesting bounded alternatives
       </h1>
       <p role="status">
-        Gemini may return at most two alternatives. Nothing will be saved automatically.
+        Gemini may return at most two draft alternatives. Nothing will be saved automatically.
+      </p>
+      <p class="caption">
+        Fictional scenario: {{ interpretation }}
       </p>
       <button
         class="button secondary"
@@ -352,6 +465,13 @@ async function leaveForHistory() {
         @click="continueWithoutModel"
       >
         Cancel and continue without Gemini
+      </button>
+      <button
+        class="text-button"
+        type="button"
+        @click="stopAndReturn"
+      >
+        Stop and go back
       </button>
     </template>
 
@@ -370,6 +490,9 @@ async function leaveForHistory() {
       >
         {{ error }}
       </p>
+      <p class="custom-preserved">
+        <strong>Fictional scenario:</strong> {{ interpretation }}
+      </p>
       <p>The failed request did not save an alternative or control navigation.</p>
       <button
         class="button primary full-width"
@@ -385,6 +508,13 @@ async function leaveForHistory() {
       >
         Retry by explicit choice
       </button>
+      <button
+        class="text-button"
+        type="button"
+        @click="stopAndReturn"
+      >
+        Stop and go back
+      </button>
     </template>
 
     <template v-else>
@@ -397,21 +527,37 @@ async function leaveForHistory() {
         Compare alternatives
       </h1>
       <p>At most two bounded alternatives; none is advice, automatically saved, or described as true.</p>
-      <button
+      <article
         v-for="item in alternatives"
         :key="item.alternative"
-        class="option-card"
+        class="option-card alternative-card"
         :class="{ selected: selectedAlternative === item.alternative }"
-        type="button"
-        :aria-pressed="selectedAlternative === item.alternative"
-        @click="selectAlternative(item)"
       >
-        <strong>{{ item.alternative }}</strong><small>{{ item.factual_basis }}</small><small>Source: {{ alternativeSource === 'gemini' ? 'Gemini-generated draft' : 'reviewed fictional example' }}</small>
-      </button>
+        <h2>{{ item.alternative }}</h2>
+        <p><strong>Reasoning:</strong> {{ item.reasoning }}</p>
+        <p><strong>Missing or uncertain context:</strong> {{ item.missing_context }}</p>
+        <p><strong>Source:</strong> {{ sourceLabel }}</p>
+        <button
+          class="button secondary"
+          type="button"
+          :aria-pressed="selectedAlternative === item.alternative"
+          @click="selectAlternative(item)"
+        >
+          {{ selectedAlternative === item.alternative ? 'Selected' : 'Select this alternative' }}
+        </button>
+      </article>
+      <section class="feature-card output-boundary">
+        <h2>Reflection question</h2>
+        <p>{{ reflectionQuestion }}</p>
+        <p class="caption">
+          {{ limitation }}
+        </p>
+      </section>
       <div class="button-row">
         <button
           class="button secondary"
           type="button"
+          :disabled="!selectedAlternative"
           @click="editMode = true"
         >
           Edit selected
@@ -428,7 +574,7 @@ async function leaveForHistory() {
           type="button"
           @click="selectedAlternative = ''; editMode = false"
         >
-          Reject both
+          Reject all
         </button>
       </div>
       <label
@@ -450,7 +596,7 @@ async function leaveForHistory() {
           v-model="observerLabel"
           maxlength="40"
         ></label>
-        <p><strong>If {{ observerLabel || 'Alex' }} described this situation, what other possibilities might be missing?</strong></p>
+        <p><strong>If {{ observerLabel || 'Fictional observer' }} described this situation, what other possibilities might be missing?</strong></p>
         <button
           class="button secondary"
           type="button"
@@ -505,6 +651,13 @@ async function leaveForHistory() {
         @click="leaveForHistory"
       >
         Open History Garden
+      </button>
+      <button
+        class="text-button"
+        type="button"
+        @click="stopAndReturn"
+      >
+        Stop and go back
       </button>
       <p
         v-if="error"

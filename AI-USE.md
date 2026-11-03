@@ -11,9 +11,9 @@ examples and credential-free mocks are permitted.
 ## Tools and roles
 
 - **OpenAI Codex:** inspected the repository, maintained project records, applied
-  basic branding, designed the proposed state/data/API/model contracts, ran local
-  checks, and managed the authorized feature-branch publication. It did not make
-  clinical decisions.
+  basic branding, designed and refined the state/data/API/model contracts, ran
+  local checks, and managed authorized feature-branch publication. It did not
+  make clinical decisions.
 - **Figma integration:** inspected the existing editable design, reused the water-
   garden variables/styles, created the new FocusBloom section and editable frames,
   and ran programmatic structural checks. Browser control was used only for the
@@ -73,8 +73,13 @@ calms, treats, restores attention, or improves a user.
 
 ## Runtime model contract (implemented and mocked)
 
-Perspective alternatives use at most one request, strict bounded JSON, no advice,
-no automatic save, zero retries, and no provider/model fallback. History RAG uses
+The reviewed Alex Perspective demonstration uses zero provider requests. A
+custom Perspective scenario uses at most one request whose provider context is
+only the normalized fictional scenario. Its strict bounded JSON contains one or
+two alternatives, reasoning and missing context for each, one reflection
+question, and the exact coursework limitation. Unknown fields, unsafe text, and
+known unsubmitted Alex-demonstration details are rejected. There is no advice,
+automatic save, retry, or provider/model fallback. History RAG uses
 at most two requests: one SQL proposal followed by one grounded answer only when
 validated rows exist. The backend validates a deliberately small SELECT grammar,
 uses a read-only URI, default-deny authorizer, bound execution/payloads, snapshot
@@ -151,3 +156,21 @@ did not start a chat, call, text, treatment search, or location/personal-data
 submission. Final regression used only disposable temporary databases and made
 no Gemini request. The human authorized the publication and merge workflow;
 Canvas submission remains manual.
+
+## Prompt 12 dynamic Perspective refinement
+
+Codex preserved the three authorized local Focus Garden edits while creating
+`feature/assignment-3-part-3` from the verified main SHA. It separated the
+pre-written Alex demonstration from the dynamic custom route, reduced the
+custom provider context to one normalized fictional `scenario`, expanded the
+strict output contract to reasoning, missing context, and a reflection question,
+and kept the existing explicit-save and request-lifecycle boundaries.
+
+The Focus Garden refinement continues after correct choices, moves the correct
+option between rounds, focuses the refreshed group, uses position-neutral hints,
+and ends only through Stop, Skip, or the existing Support interruption. Tests
+used fake keys, mocked gateway output, stubbed fetch, and temporary databases.
+No environment file, project runtime database, Figma artifact, or live Gemini
+request was accessed. These tests establish contract behavior only; a future
+separately authorized live-model check is required to evaluate whether output is
+relevant to a fictional custom scenario.

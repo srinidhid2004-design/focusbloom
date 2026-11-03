@@ -1,69 +1,77 @@
 # Current handoff
 
-- **Date:** October 29, 2026
+- **Date:** November 2, 2026
 - **Project:** FocusBloom
-- **Milestone:** Assignment 3.2 — final publication candidate
-- **Source branch:** `feature/assignment-3-part-2`
-- **Assessed implementation SHA:** `1bcc8acafdfd6c69d0566b27fd83eb22e6001006`
-- **Pre-publication main SHA:** `9f7a09d5ceb4fc50520e26ad6140103de3cc903e`
+- **Milestone:** Assignment 3.3 — dynamic Perspective refinement checkpoint
+- **Working branch:** `feature/assignment-3-part-3`
+- **Base/main SHA:** `769bfcd8581efc8faab9ab64d953fa995c3595f8`
 - **Public repository:** https://github.com/srinidhid2004-design/focusbloom
-- **Canvas-ready file:** `reports/assignment-3-part-2/report.md`
+- **Submitted Assignment 3.2 report:** `reports/assignment-3-part-2/report.md`
 
-## Completed implementation and live evidence
+## Implemented checkpoint
 
-FocusBloom implements the approved Vue 3/FastAPI experience, version-2
-nine-table schema, exact 22-operation API, seven no-typing Focus Garden
-activities, Perspective Studio and Lens, optional user-authored Seed, factual
-History Garden, bounded Garden Guide, and independent static Support.
+Perspective Studio now has two isolated paths. The reviewed Alex demonstration
+uses pre-written evidence, uncertainty, and alternatives and makes zero provider
+requests. The optional custom path has one 280-character fictional-scenario
+field, trims outer whitespace, previews the exact normalized scenario, and sends
+only `{idempotency_key, scenario}` after an explicit Generate action.
 
-The Prompt 10 workflow verified a one-request fictional Perspective success,
-explicit artifact and Seed saves, an exactly two-request Garden Guide answer
-grounded in two bounded rows with references 1 and 2, targeted artifact deletion
-with Seed retention, provider-independent Support, focus restoration, and a clean
-direct application console. Provider rows remain exactly six. The fixed model,
-zero-retry/no-fallback policy, unchanged SQL validator, schema, API, and
-application-owned control boundaries remain intact.
+The custom provider context contains only the scenario. Its strict output
+requires one or two alternatives with reasoning and missing context, one neutral
+reflection question, and the exact coursework limitation. Unknown, oversized,
+unsafe, malformed, or known unsubmitted Alex-specific output is rejected. Valid
+output is labeled **Gemini-generated draft** and does not save automatically.
+Failure preserves the scenario and can continue with accurately labeled general
+reviewed copy that does not pretend to analyze it.
 
-## Final verification
+Next-Step Seed remains optional and user-authored. The selected alternative is
+not converted into a plan or saved automatically; the existing separate Preview
+and Save actions remain required.
 
-- Backend: 69 passed with two known non-failing dependency warnings.
-- Dependency integrity: `pip check` passed.
-- Focused validator/request-count/grounding/Perspective set: 50 passed.
-- Frontend: 17 passed; ESLint passed with zero warnings.
+The preserved Focus Garden refinement now continues after each correct choice,
+moves the correct option between rounds, focuses the refreshed option group, and
+uses position-neutral hints. It stays active until Stop or Skip; Support retains
+its existing interruption behavior. No score, streak, countdown, penalty, or
+failure label was added.
+
+## Model and persistence boundary
+
+- Fixed model: `gemini-3.5-flash-lite`.
+- Backend-only configuration; ten-second timeout; one SDK attempt; zero
+  automatic retries; no provider/model fallback.
+- Missing configuration or invalid input: zero provider requests.
+- Accepted success/failure: one request. Duplicate idempotency: zero additional.
+- Model lifecycle rows retain hashes and factual metadata, not raw input/output.
+- No schema or route-count change; no automatic artifact or Seed save.
+- No runtime database access, environment-file read, live Gemini request, Figma
+  action, dependency change, or voice/audio work occurred.
+
+## Verification
+
+- Focused Perspective backend: 22 passed with two known non-failing dependency
+  warnings.
+- Complete backend: 75 passed with the same two warnings.
+- `pip check`: no broken requirements.
+- Complete frontend: 2 files, 22 tests passed.
+- ESLint: passed with zero warnings.
 - Production build: passed with 22 modules transformed.
-- OpenAPI: exactly 22 operations.
-- Disposable database: schema version 2, nine tables, `integrity=ok`, zero
-  foreign-key violations.
-- Credential, private-path, tracked runtime/generated-file, frontend marker,
-  `v-html`, and ignore-rule scans: clean.
 
-All final regression databases were disposable OS-temporary files. Prompt 11
-made no Gemini request, did not access `backend/.env`, and did not open or modify
-the ignored project runtime database.
+Tests used fake keys, an injected fake gateway, stubbed fetch, and disposable
+temporary databases. They are mocked contract/application evidence, not live
+response-quality or clinical/effectiveness evidence.
 
-## Support and report
+## Next authorized evaluation
 
-All seven official Support sources were manually rechecked in a normal browser
-on October 29, 2026. Titles, organizations, final HTTPS destinations, purposes,
-and the official 988 chat redirect matched the three documented categories. No
-call, text, chat, treatment search, location, or personal information was
-submitted. The next review is due by January 27, 2027 or after a material change.
+A later task may authorize exactly one fictional custom-scenario live request to
+assess relevance and tailoring under the new response schema. That evaluation
+must not repeat the already verified Garden Guide flow, access private data, or
+be described as therapy, diagnosis, crisis, attention/emotion, improvement,
+effectiveness, or clinical-safety validation.
 
-The self-contained Assignment 3.2 report links public-safe implementation,
-Figma, documentation, and screenshot evidence. Earlier provider-unavailable and
-query-rejected images are labeled as safe-failure evidence, not final success.
-The root Part 3.1 `report.md`, decisions, prompts 01–06, Figma sections, and
-historical commits remain unchanged.
+## Historical continuity
 
-## Publication boundary
-
-This handoff was authored before the documentation commit and authorized
-non-fast-forward merge, so it does not invent their SHAs. The publication
-checkpoint must record the actual documentation and merge commits in its final
-response after both pushes and unauthenticated public-link verification pass.
-Canvas upload remains a manual human action; no Canvas submission or recording
-is claimed.
-
-FocusBloom remains fictional coursework software, not therapy, diagnosis,
-medical advice, crisis detection, monitoring, clinical validation, or evidence
-of attention or effectiveness. It has no voice or audio capability.
+`main`, root `report.md`, `docs/part-3-1-decisions.md`, prompts 01–11, original
+Figma sections, prior evidence images, and
+`reports/assignment-3-part-2/report.md` remain unchanged. This handoff records
+the feature contents and base; the final task response and feature-branch Git
+history record the resulting checkpoint commit and push SHA.

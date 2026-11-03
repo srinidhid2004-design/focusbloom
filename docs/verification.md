@@ -1147,3 +1147,76 @@ source verification, not clinical or effectiveness validation.
 `report.md` remains the historical Part 3.1 submission. Part 3.1 decisions,
 prompts 01–06, original Figma sections, and historical assessed commits remain
 unchanged. Canvas access and submission were not performed.
+
+## Assignment 3.3 dynamic Perspective checkpoint — November 2, 2026
+
+### Boundary verified before modification
+
+- Local `main` and `origin/main` matched required SHA
+  `769bfcd8581efc8faab9ab64d953fa995c3595f8`.
+- Exactly three authorized Focus Garden files were modified, with no staged
+  content. Their working-tree content survived the switch to
+  `feature/assignment-3-part-3` unchanged.
+- `backend/.env`, `data/app.sqlite3`, `.venv`, `node_modules`, caches, and build
+  output were ignored and untracked. No credential or runtime database was
+  tracked.
+- No dependency installation, schema migration, runtime database access, Figma
+  action, or live provider request was required.
+
+### Perspective request and output checks
+
+The reviewed demonstration is local reviewed content and makes zero provider
+requests. The custom frontend trims only outer whitespace, previews the exact
+result, and submits `{idempotency_key, scenario}`. Strict backend parsing rejects
+unknown fields, and the provider receives only `{"scenario":"..."}`. Model
+lifecycle storage retains a hash and factual request metadata rather than raw
+scenario or output.
+
+The strict output permits one or two alternatives. Each requires `alternative`,
+`reasoning`, and `missing_context`; the root requires one
+`reflection_question` and the exact limitation. Unknown, oversized, unsafe,
+malformed, or known unsubmitted Alex-demonstration content is rejected behind a
+sanitized failure. The model remains `gemini-3.5-flash-lite`, backend-only, with
+a ten-second timeout, one SDK attempt, zero automatic retries, and no fallback.
+
+Mocked counts observed by tests:
+
+| Scenario | Provider requests |
+| --- | ---: |
+| Reviewed Alex demonstration | 0 |
+| Structurally invalid custom input | 0 |
+| Missing configuration | 0 |
+| Successful accepted custom request | 1 |
+| Provider failure | 1 |
+| Duplicate idempotency submission | 0 additional |
+
+Generation produced no artifact write. Failure preserved the custom text; the
+deterministic fallback was labeled **Reviewed fictional example** and explicitly
+identified itself as general copy rather than a personalized analysis. Seed
+tests observed no write before Preview and explicit Save.
+
+### Focus Garden checks
+
+Frontend tests observed the correct option at index 1, then 2, then 0 across
+correct rounds while the state remained active and no completion PATCH/event
+occurred. The refreshed group receives focus and a new-round label. The hint no
+longer names a center/middle position. Separate Stop and Skip checks observed the
+matching terminal action and no completed event. Existing Support interruption
+behavior remained covered by the full frontend suite.
+
+### Commands and observed results
+
+| Check | Observed result |
+| --- | --- |
+| `.venv/Scripts/python.exe -m pytest tests/test_perspective.py -q` | 22 passed; two known non-failing dependency warnings |
+| `.venv/Scripts/python.exe -m pytest -q` | 75 passed; same two warnings |
+| `.venv/Scripts/python.exe -m pip check` | No broken requirements found |
+| `npm test` | 2 files, 22 tests passed |
+| `npm run lint` | Passed with zero warnings |
+| `npm run build` | Passed; 22 modules transformed |
+
+All databases used by tests were temporary. All provider behavior was fake or
+stubbed. A future separately authorized live request is required only to assess
+whether one fictional custom response is relevant and tailored under the new
+schema. It would not validate therapy, diagnosis, crisis handling, clinical
+safety, attention, emotion, improvement, or effectiveness.

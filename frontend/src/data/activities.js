@@ -3,11 +3,11 @@ export const activityPresentations = {
     title: 'Find the differently shaped leaf',
     prompt: 'Choose the leaf with a pointed tip.',
     options: [
-      { id: 'round-left', label: 'Rounded leaf, left', symbol: '●' },
-      { id: 'pointed', label: 'Pointed leaf, center', symbol: '◆', correct: true },
-      { id: 'round-right', label: 'Rounded leaf, right', symbol: '●' },
+      { id: 'round-a', label: 'Rounded leaf A', symbol: '●' },
+      { id: 'pointed', label: 'Pointed leaf', symbol: '◆', correct: true },
+      { id: 'round-b', label: 'Rounded leaf B', symbol: '●' },
     ],
-    hint: 'The center leaf has a pointed diamond shape.',
+    hint: 'The pointed leaf has a diamond shape.',
   },
   ripple_path: {
     title: 'Follow the ripple path',
@@ -17,7 +17,7 @@ export const activityPresentations = {
       { id: 'path-b', label: 'Path 1, 2, 3', symbol: '1–2–3', correct: true },
       { id: 'path-c', label: 'Path 2, 1, 3', symbol: '2–1–3' },
     ],
-    hint: 'The middle path keeps the numbers in order.',
+    hint: 'The correct path keeps the numbers in order.',
   },
   flower_match: {
     title: 'Match the flower patterns',
@@ -27,7 +27,7 @@ export const activityPresentations = {
       { id: 'pair-b', label: 'Two dotted flowers', symbol: '⊙  ⊙', correct: true },
       { id: 'pair-c', label: 'Plain and striped flowers', symbol: '○  ▧' },
     ],
-    hint: 'The middle pair has dots on both flowers.',
+    hint: 'The matching pair has dots on both flowers.',
   },
   flower_change: {
     title: 'Identify what changed',
@@ -67,7 +67,7 @@ export const activityPresentations = {
       { id: 'route-b', label: 'Gate to blue pond', symbol: 'Gate → Pond', correct: true },
       { id: 'route-c', label: 'Pond to tree', symbol: 'Pond → Tree' },
     ],
-    hint: 'The middle path begins at the gate and ends at the pond.',
+    hint: 'The correct path begins at the gate and ends at the pond.',
   },
 }
 

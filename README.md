@@ -17,12 +17,15 @@ text, clicks, timing, completion, or history.
 
 ## Current milestone
 
-This feature branch implements the approved Assignment 3.2 FocusBloom backend
-and Vue experience. It has the exact nine-table version-2 SQLite schema,
+This feature branch implements the first Assignment 3.3 refinement on top of the
+approved Assignment 3.2 FocusBloom backend and Vue experience. It retains the
+exact nine-table version-2 SQLite schema,
 22-operation `/api` surface, factual activity/session persistence, explicitly
 saved Perspective artifacts and Next-Step Seeds, ordered history conversations,
-lifecycle-only model records, one-request Perspective alternatives, and the
-bounded two-request history RAG workflow. The previous breathing-specific
+lifecycle-only model records, one-request custom Perspective alternatives, and
+the bounded two-request history RAG workflow. The reviewed Alex demonstration
+is now provider-free and completely separated from the custom request. The
+previous breathing-specific
 version-1 implementation remains only in Git history and historical records.
 
 The October 29 integrated checkpoint passed the complete automated regression
@@ -41,6 +44,7 @@ Authoritative active records:
 
 - [Product pivot](docs/focusbloom-pivot.md)
 - [Assignment 3.2 implementation contract](docs/part-3-2-implementation-plan.md)
+- [Assignment 3.3 refinement plan](docs/part-3-3-refinement-plan.md)
 - [Design pipeline](docs/design-pipeline.md)
 - [Support resources](docs/support-resources.md)
 - [Verification record](docs/verification.md)
@@ -64,7 +68,8 @@ The entry screen offers a one-tap **Start a Focus Garden** path. Each optional
 activity presents one visual-search task and one visible instruction at a time,
 requires no typing, and keeps **Show me**, **Skip this**, **Stop**, and Support
 available. Activities are unscored and cannot be described as treatment,
-grounding, or clinically effective.
+grounding, or clinically effective. A correct choice starts another round, the
+correct option moves, and the activity stays active until Stop or Skip.
 
 ### Perspective Studio
 
@@ -77,10 +82,15 @@ application and user:
 4. consider an alternative; and
 5. accept, edit, reject, or create an alternative.
 
-**Try a fictional example** completes the demonstration without personal input.
-A custom path uses at most one short initial field. Optional Perspective Lens
-uses a fictional observer. The user sees what would be sent to Gemini, may
-continue without it, and saves nothing without explicit preview and Save.
+The reviewed Alex example completes a pre-written demonstration without personal
+input or a provider request. A clearly separate custom path uses one optional
+fictional scenario field, shows the exact normalized scenario, and makes one
+bounded request only after an explicit Generate action. The strict result has
+one or two alternatives, per-alternative reasoning and missing context, one
+neutral reflection question, and the exact coursework limitation. Output is
+labeled **Gemini-generated draft**, not truth. Optional Perspective Lens uses a
+fictional observer. The user may continue without Gemini using accurately
+labeled neutral reviewed copy, and nothing is saved without explicit Save.
 
 ### Next-Step Seed
 
@@ -202,3 +212,22 @@ Official Support sources were manually rechecked on October 29, 2026, and the
 final feature regression passed without a provider request or runtime-database
 access. Canvas upload remains a manual human action. No key is needed for
 ordinary Focus Garden, History browsing, saved-text controls, or Support.
+
+## Assignment 3.3 refinement status
+
+The reviewed Alex demonstration now uses zero provider requests. A custom
+Perspective request contains only an idempotency UUID and one normalized
+fictional `scenario`; Gemini receives only that scenario. Strict output requires
+one or two alternatives with reasoning and missing context, one neutral
+reflection question, and the exact coursework limitation. Unknown, oversized,
+unsafe, malformed, or unsubmitted Alex-specific output is rejected, and no
+generation automatically saves an artifact or Seed.
+
+Checkpoint verification uses fake keys, an injected fake gateway, stubbed fetch,
+and disposable test databases only. It does not access `backend/.env` or the
+project runtime database and makes no live provider request. A later separately
+authorized live check is still needed to evaluate the relevance of one fictional
+custom response; it would not be clinical, safety, or effectiveness evidence.
+The complete checkpoint regression passed 75 backend tests and 22 frontend
+tests; dependency integrity, ESLint with zero warnings, and the production build
+also passed.

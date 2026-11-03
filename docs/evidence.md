@@ -23,6 +23,7 @@ publication checks.
 | [`09-focusbloom-vue-experience.md`](../prompts/09-focusbloom-vue-experience.md) | Implement the complete approved Vue experience without live provider or project-database access | Seventeen-state low-input interface, exact API service, activity data, request guard, tests, styles, and continuity updates | Figma/context inspection; frontend tests/lint/build; disposable-database browser checks at narrow and wide viewports; credential/runtime scans |
 | [`10-integrated-live-verification.md`](../prompts/10-integrated-live-verification.md) | Run the bounded fictional integrated flow and make only narrowly authorized corrections | Provider-schema and instruction alignment, successful Perspective/Garden evidence, explicit save/delete evidence, and final verification commit | Full and focused suites; bounded live request ledger; UI, console, read-only database, grounding, focus, Support, and public-safe evidence checks |
 | [`11-final-assignment-report.md`](../prompts/11-final-assignment-report.md) | Finalize the Canvas-ready report and authorized publication without another provider request or runtime-database access | Part 3.2 `report.md`, current Support review, publication evidence, and synchronized continuity records | Seven-source manual review; full and focused suites; OpenAPI/temp-schema inspections; credential/private-path/runtime scans; staged, merge, and public-link gates |
+| [`12-part-3-3-dynamic-perspective.md`](../prompts/12-part-3-3-dynamic-perspective.md) | Separate reviewed demonstration content from a dynamic custom Perspective route and complete the continuing Focus Garden rounds | Scenario-only request, strict reasoning/missing-context/question response, neutral fallback, explicit save/Seed boundary, moving rounds, and synchronized active records | 22 focused Perspective backend tests; 75-test backend suite; 22-test frontend suite; pip/lint/build; mocked 0/1 request counts; repository and protected-file audits |
 
 ## Consequential design comparison
 
@@ -526,3 +527,63 @@ The Canvas-ready report is `reports/assignment-3-part-2/report.md`. The
 historical root `report.md`, `docs/part-3-1-decisions.md`, prompts 01–06, original
 Figma sections, and assessed commits remain unchanged. Canvas upload is not part
 of this evidence and remains a manual human action.
+
+## Assignment 3.3 dynamic Perspective evidence — November 2, 2026
+
+### Start gate and preserved work
+
+Local `main` and `origin/main` both began at
+`769bfcd8581efc8faab9ab64d953fa995c3595f8`. The only existing working-tree
+changes were the authorized Focus Garden component, activity presentation data,
+and frontend test file; nothing was staged. The work moved to
+`feature/assignment-3-part-3` without changing those three files during the
+switch. `backend/.env`, `data/app.sqlite3`, dependency directories, caches, and
+build output remained ignored and untracked.
+
+### Mocked contract observations
+
+- The reviewed Alex demonstration made zero `/perspective/alternatives`
+  requests and labeled its source **Reviewed fictional example**.
+- A custom UI request contained only an idempotency UUID and the outer-trimmed
+  fictional `scenario`. The backend provider context contained only that
+  scenario. No Alex interpretation, evidence, uncertainty, or observer field was
+  present.
+- Two different fictional inputs received and displayed two different stubbed
+  results. Each visible result paired its alternative with reasoning and missing
+  context and also showed the reflection question, exact limitation, and
+  **Gemini-generated draft** label.
+- Successful generation made one fake-gateway call and saved no artifact.
+  Missing configuration and invalid request structure made zero calls. Failure
+  made one call with zero automatic retries; duplicate idempotency made no
+  additional call.
+- Unknown, oversized, unsafe, malformed, and known unsubmitted Alex-specific
+  output was rejected. Provider-controlled markup/links and raw errors remained
+  outside the UI.
+- Failure preserved the fictional scenario. Continue without Gemini showed
+  general reviewed copy that explicitly said it was not an analysis of the
+  submitted scenario; it did not display Alex content or claim personalization.
+- Next-Step Seed remained user-authored: no Seed write occurred until separate
+  Preview and Save actions, and the mocked write contained the user's situation
+  and action.
+- Focus Garden remained active after correct choices, moved the correct option
+  from index 1 to 2 to 0, focused the refreshed group, and used a position-neutral
+  hint. Stop and Skip were the only tested ordinary terminal actions; neither
+  path created a completed event.
+
+### Automated results
+
+| Check | Observed result |
+| --- | --- |
+| Focused Perspective backend | 22 passed; two non-failing dependency deprecation warnings |
+| Complete backend | 75 passed; same two warnings |
+| Dependency integrity | No broken requirements found |
+| Complete frontend | 2 files, 22 tests passed |
+| ESLint | Passed with zero warnings |
+| Production build | Passed; 22 modules transformed |
+
+Tests used fake keys, an injected fake gateway, stubbed fetch, and disposable
+temporary databases. No runtime database, environment file content, credential,
+Figma artifact, or live provider was accessed. This is contract/application
+evidence, not response-quality, clinical, safety, attention, emotion,
+improvement, or effectiveness evidence. A later separately authorized live
+fictional custom-scenario evaluation remains necessary to assess model relevance.

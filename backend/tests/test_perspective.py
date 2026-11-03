@@ -21,10 +21,7 @@ from app.schemas import GroundedHistoryAnswer, PerspectiveAlternativesOutput
 def perspective_payload(key: str | None = None) -> dict:
     return {
         "idempotency_key": key or str(uuid4()),
-        "interpretation": "The fictional result must have only one explanation.",
-        "supporting_evidence": ["One fictional attempt was incomplete."],
-        "uncertainty": ["Other possible explanations were not checked."],
-        "observer_mode": "fictional_alex",
+        "scenario": "The fictional result must have only one explanation.",
     }
 
 
@@ -51,8 +48,10 @@ def test_google_gateway_sends_json_schema_with_one_attempt(monkeypatch) -> None:
             return SimpleNamespace(parsed={
                 "alternatives": [{
                     "alternative": "The visible facts allow another explanation.",
-                    "factual_basis": "The reason for leaving is not stated.",
+                    "reasoning": "The submitted event could have more than one cause.",
+                    "missing_context": "The cause is not stated in the fictional scenario.",
                 }],
+                "reflection_question": "What other fact would help compare the possibilities?",
                 "limitation": "Coursework prototype; not therapy or medical advice.",
             })
 
@@ -63,10 +62,7 @@ def test_google_gateway_sends_json_schema_with_one_attempt(monkeypatch) -> None:
 
     monkeypatch.setattr("app.gemini.genai.Client", FakeClient)
     output = GoogleGeminiGateway(Settings(gemini_api_key=SecretStr("fictional-test-key"))).perspective({
-        "interpretation": "A fictional interpretation.",
-        "supporting_evidence": ["One visible event."],
-        "uncertainty": ["The cause is not stated."],
-        "observer_mode": "none",
+        "scenario": "A fictional interpretation.",
     })
 
     assert output.alternatives[0].alternative == "The visible facts allow another explanation."
@@ -102,6 +98,9 @@ def test_success_uses_one_call_and_does_not_save_artifact(harness_factory) -> No
     assert response.json()["saved"] is False
     assert len(response.json()["alternatives"]["alternatives"]) == 1
     assert [call[0] for call in harness.gateway.calls] == ["perspective"]
+    assert harness.gateway.calls[0][1] == {
+        "scenario": "The fictional result must have only one explanation."
+    }
     assert harness.request("GET", "/api/perspective-artifacts").json()["artifacts"] == []
 
 
@@ -134,7 +133,12 @@ def test_provider_failure_has_one_call_and_sanitized_response(harness_factory) -
 def test_malformed_or_unsafe_output_is_rejected(harness_factory) -> None:
     harness = harness_factory()
     harness.gateway.perspective_result = {
-        "alternatives": [{"alternative": "This will improve your mental health.", "factual_basis": "Claim."}],
+        "alternatives": [{
+            "alternative": "This will improve your mental health.",
+            "reasoning": "Claim.",
+            "missing_context": "Nothing is missing.",
+        }],
+        "reflection_question": "What else is known?",
         "limitation": "Coursework prototype; not therapy or medical advice.",
     }
     response = harness.request("POST", "/api/perspective/alternatives", json=perspective_payload())
@@ -146,9 +150,14 @@ def test_more_than_two_generated_alternatives_is_rejected(harness_factory) -> No
     harness = harness_factory()
     harness.gateway.perspective_result = {
         "alternatives": [
-            {"alternative": f"Bounded alternative {index}.", "factual_basis": "Only supplied facts are used."}
+            {
+                "alternative": f"Bounded alternative {index}.",
+                "reasoning": "Only the supplied fictional text is used.",
+                "missing_context": "Other relevant details are not stated.",
+            }
             for index in range(3)
         ],
+        "reflection_question": "What other context could be relevant?",
         "limitation": "Coursework prototype; not therapy or medical advice.",
     }
     response = harness.request("POST", "/api/perspective/alternatives", json=perspective_payload())
@@ -161,8 +170,10 @@ def test_generated_advice_is_rejected(harness_factory) -> None:
     harness.gateway.perspective_result = {
         "alternatives": [{
             "alternative": "You should take action on the fictional assignment.",
-            "factual_basis": "One fictional card was supplied.",
+            "reasoning": "One fictional scenario was supplied.",
+            "missing_context": "Other details are not supplied.",
         }],
+        "reflection_question": "What else is known?",
         "limitation": "Coursework prototype; not therapy or medical advice.",
     }
     response = harness.request("POST", "/api/perspective/alternatives", json=perspective_payload())
@@ -173,8 +184,74 @@ def test_generated_advice_is_rejected(harness_factory) -> None:
 def test_invalid_input_uses_zero_calls_and_does_not_echo(harness_factory) -> None:
     harness = harness_factory()
     payload = perspective_payload()
-    payload["interpretation"] = "private-value" * 40
+    payload["scenario"] = "private-value" * 40
     response = harness.request("POST", "/api/perspective/alternatives", json=payload)
     assert response.status_code == 422
     assert harness.gateway.calls == []
     assert "private-value" not in response.text
+
+
+@pytest.mark.parametrize("bad_result", [
+    {
+        "alternatives": [{
+            "alternative": "One possible reading.",
+            "reasoning": "The submitted scenario permits it.",
+            "missing_context": "Other context is absent.",
+            "unknown": "not allowed",
+        }],
+        "reflection_question": "What else is known?",
+        "limitation": "Coursework prototype; not therapy or medical advice.",
+    },
+    {
+        "alternatives": [{
+            "alternative": "One possible reading.",
+            "reasoning": "x" * 241,
+            "missing_context": "Other context is absent.",
+        }],
+        "reflection_question": "What else is known?",
+        "limitation": "Coursework prototype; not therapy or medical advice.",
+    },
+    {
+        "alternatives": [{
+            "alternative": "They definitely intended a particular result.",
+            "reasoning": "The submitted scenario permits it.",
+            "missing_context": "Other context is absent.",
+        }],
+        "reflection_question": "What else is known?",
+        "limitation": "Coursework prototype; not therapy or medical advice.",
+    },
+    {
+        "alternatives": [{
+            "alternative": "Alex may have changed the fictional result.",
+            "reasoning": "The classmate left after an idea was shared.",
+            "missing_context": "The idea was bad is not established.",
+        }],
+        "reflection_question": "What else is known?",
+        "limitation": "Coursework prototype; not therapy or medical advice.",
+    },
+    {
+        "alternatives": [{
+            "alternative": "One possible reading.",
+            "reasoning": "The submitted scenario permits it.",
+        }],
+        "reflection_question": "What else is known?",
+        "limitation": "Coursework prototype; not therapy or medical advice.",
+    },
+])
+def test_unknown_oversized_unsafe_or_malformed_output_is_rejected(
+    harness_factory, bad_result
+) -> None:
+    harness = harness_factory()
+    harness.gateway.perspective_result = bad_result
+    response = harness.request("POST", "/api/perspective/alternatives", json=perspective_payload())
+    assert response.status_code == 502
+    assert len(harness.gateway.calls) == 1
+
+
+def test_unknown_request_field_uses_zero_provider_calls(harness_factory) -> None:
+    harness = harness_factory()
+    payload = perspective_payload()
+    payload["supporting_evidence"] = ["This field is no longer accepted."]
+    response = harness.request("POST", "/api/perspective/alternatives", json=payload)
+    assert response.status_code == 422
+    assert harness.gateway.calls == []

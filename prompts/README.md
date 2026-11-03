@@ -5,8 +5,8 @@
 This directory keeps concise evidence of significant project instructions,
 decisions, acceptance criteria, and observed results. It supports later review of
 how AI-assisted work affected the project without storing full conversations.
-The active milestone is the **FocusBloom Assignment 3.2 final report and
-publication**. The five-table/11-route BreathBloom backend is retained only in
+The active milestone is the **FocusBloom Assignment 3.3 dynamic Perspective
+refinement**. The five-table/11-route BreathBloom backend is retained only in
 Git history and historical evidence. The nine-table/22-operation FocusBloom
 backend and complete Vue interface are implemented. A narrow provider-schema
 correction enabled successful live Perspective generation and explicit saves;
@@ -17,6 +17,11 @@ integrated verification.
 The Canvas-ready report and final publication record preserve the distinction
 between automated tests, bounded live calls, manual source review, and public
 link verification.
+
+Assignment 3.3 retains the submitted report unchanged. Its first checkpoint
+separates the provider-free reviewed Alex demonstration from a one-field custom
+fictional route and verifies the new contract with mocks only. A future live
+custom-scenario evaluation remains separately authorized work.
 
 ## Redaction and safety rules
 
@@ -45,6 +50,7 @@ link verification.
 | [`09-focusbloom-vue-experience.md`](09-focusbloom-vue-experience.md) | 2026-10-28 | Implement, verify, audit, and publish the complete 17-state Vue experience from the approved Figma references | Low-input Focus Garden, Perspective, Seed, History, Garden Guide, independent Support, exact API service, 17 frontend tests, and exact viewport browser checks; no live provider, real key, project database, or Figma change |
 | [`10-integrated-live-verification.md`](10-integrated-live-verification.md) | 2026-10-29 | Run bounded integrated regression, diagnose narrow provider/instruction incompatibilities, and verify the complete live application flow | The equivalent enum correction enabled Perspective; an instruction-only SQL-grammar alignment preserved the validator and enabled two-request grounded Garden retrieval, artifact deletion with Seed retention, Support/focus checks, and clean final suites |
 | [`11-final-assignment-report.md`](11-final-assignment-report.md) | 2026-10-29 | Create the Canvas-ready Part 3.2 report, reverify official Support sources, run final regression, and publish through the authorized feature/merge workflow | Seven official sources manually confirmed; complete suites and repository audits passed; final report and continuity records prepared without provider or runtime-database access |
+| [`12-part-3-3-dynamic-perspective.md`](12-part-3-3-dynamic-perspective.md) | 2026-11-02 | Separate the reviewed Alex demonstration from a genuinely dynamic one-field custom Perspective route and finish the looping Focus Garden refinement | Strict scenario-only request and richer bounded response, neutral failure fallback, explicit save/Seed boundary, moving Focus rounds, and complete mocked regression; no live provider, runtime database, credential, dependency, schema, Figma, report, or main change |
 
 ## Future numbering
 
