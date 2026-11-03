@@ -233,12 +233,7 @@ class FocusBloomService:
         return {"outcome": "success", "session": public_session(row), "events": [public_event(event) for event in events]}
 
     def perspective_alternatives(self, payload: PerspectiveAlternativesRequest) -> tuple[int, dict[str, Any]]:
-        context = {
-            "interpretation": payload.interpretation,
-            "supporting_evidence": payload.supporting_evidence,
-            "uncertainty": payload.uncertainty,
-            "observer_mode": payload.observer_mode,
-        }
+        context = {"scenario": payload.scenario}
         try:
             request, duplicate = self.repository.create_model_request(
                 idempotency_key=str(payload.idempotency_key), purpose="perspective_alternatives",
@@ -254,7 +249,7 @@ class FocusBloomService:
             self.repository.update_model_request(request["request_id"], status="failed", safe_error_code="missing_configuration", attempt_count=0)
             raise APIError(503, "missing_configuration", MISSING_CONFIGURATION_MESSAGE)
         try:
-            output = validate_perspective(self.model.perspective(context))
+            output = validate_perspective(self.model.perspective(context), scenario=payload.scenario)
         except ProviderProblem as exc:
             self.repository.update_model_request(
                 request["request_id"], status="failed", safe_error_code=exc.safe_error_code, attempt_count=1

@@ -1147,3 +1147,263 @@ source verification, not clinical or effectiveness validation.
 `report.md` remains the historical Part 3.1 submission. Part 3.1 decisions,
 prompts 01–06, original Figma sections, and historical assessed commits remain
 unchanged. Canvas access and submission were not performed.
+
+## Assignment 3.3 dynamic Perspective checkpoint — November 2, 2026
+
+### Boundary verified before modification
+
+- Local `main` and `origin/main` matched required SHA
+  `769bfcd8581efc8faab9ab64d953fa995c3595f8`.
+- Exactly three authorized Focus Garden files were modified, with no staged
+  content. Their working-tree content survived the switch to
+  `feature/assignment-3-part-3` unchanged.
+- `backend/.env`, `data/app.sqlite3`, `.venv`, `node_modules`, caches, and build
+  output were ignored and untracked. No credential or runtime database was
+  tracked.
+- No dependency installation, schema migration, runtime database access, Figma
+  action, or live provider request was required.
+
+### Perspective request and output checks
+
+The reviewed demonstration is local reviewed content and makes zero provider
+requests. The custom frontend trims only outer whitespace, previews the exact
+result, and submits `{idempotency_key, scenario}`. Strict backend parsing rejects
+unknown fields, and the provider receives only `{"scenario":"..."}`. Model
+lifecycle storage retains a hash and factual request metadata rather than raw
+scenario or output.
+
+The strict output permits one or two alternatives. Each requires `alternative`,
+`reasoning`, and `missing_context`; the root requires one
+`reflection_question` and the exact limitation. Unknown, oversized, unsafe,
+malformed, or known unsubmitted Alex-demonstration content is rejected behind a
+sanitized failure. The model remains `gemini-3.5-flash-lite`, backend-only, with
+a ten-second timeout, one SDK attempt, zero automatic retries, and no fallback.
+
+Mocked counts observed by tests:
+
+| Scenario | Provider requests |
+| --- | ---: |
+| Reviewed Alex demonstration | 0 |
+| Structurally invalid custom input | 0 |
+| Missing configuration | 0 |
+| Successful accepted custom request | 1 |
+| Provider failure | 1 |
+| Duplicate idempotency submission | 0 additional |
+
+Generation produced no artifact write. Failure preserved the custom text; the
+deterministic fallback was labeled **Reviewed fictional example** and explicitly
+identified itself as general copy rather than a personalized analysis. Seed
+tests observed no write before Preview and explicit Save.
+
+### Focus Garden checks
+
+Frontend tests observed the correct option at index 1, then 2, then 0 across
+correct rounds while the state remained active and no completion PATCH/event
+occurred. The refreshed group receives focus and a new-round label. The hint no
+longer names a center/middle position. Separate Stop and Skip checks observed the
+matching terminal action and no completed event. Existing Support interruption
+behavior remained covered by the full frontend suite.
+
+### Commands and observed results
+
+| Check | Observed result |
+| --- | --- |
+| `.venv/Scripts/python.exe -m pytest tests/test_perspective.py -q` | 22 passed; two known non-failing dependency warnings |
+| `.venv/Scripts/python.exe -m pytest -q` | 75 passed; same two warnings |
+| `.venv/Scripts/python.exe -m pip check` | No broken requirements found |
+| `npm test` | 2 files, 22 tests passed |
+| `npm run lint` | Passed with zero warnings |
+| `npm run build` | Passed; 22 modules transformed |
+
+All databases used by tests were temporary. All provider behavior was fake or
+stubbed. At the Prompt 12 checkpoint, the separately authorized live evaluation
+recorded in the next section had not yet occurred. Such evaluation does not
+validate therapy, diagnosis, crisis handling, clinical safety, attention,
+emotion, improvement, or effectiveness.
+
+## Assignment 3.3 fifteen-scenario evaluation — November 2, 2026
+
+### Scope and live-request ledger
+
+The evaluation used the versioned fictional fixture in
+`backend/tests/fixtures/part_3_3_scenarios.json` and the complete matrix in
+`docs/part-3-3-evaluation.md`. Mocked checks covered all 15 required scenarios
+and three cross-case behaviors: Support independence, explicit persistence, and
+bounded model control. Tests used fake credentials, injected gateways, stubbed
+fetch, and temporary SQLite databases.
+
+After preflight, exactly four live Perspective submissions were deliberately
+made: A1, A2, B, and C. A1 and A2 repeated the same fictional scenario; B and C
+used different fictional scenarios. Each submission returned HTTP 200, made one
+provider request, stored one succeeded attempt-count-1 lifecycle row, passed the
+strict validator, and saved no artifact or Seed. There were four total live
+Perspective provider requests and four lifecycle rows, with zero automatic
+retries and no fallback. No live Garden Guide request occurred.
+
+The disposable live database reported `integrity_check=ok`, zero foreign-key
+violations, zero artifacts, and zero Seeds. It retained request lifecycle
+metadata only; repository evidence does not include raw provider payloads,
+credentials, personal data, or private paths.
+
+### Observed quality boundary
+
+Both A responses varied in wording while retaining alternatives, factual bases,
+missing context, a reflection question, and the fixed limitation. All four were
+relevant and bounded, but strict structural acceptance did not prove perfect
+semantic grounding: the B response used general claims such as presentation
+changes being common rather than relying only on the supplied scenario. This
+finding is recorded rather than silently relabeled as success. It is not a
+clinical, safety, or effectiveness conclusion.
+
+### Commands and observed results
+
+| Check | Observed result |
+| --- | --- |
+| Focused Perspective, Prompt 13, and Guide backend tests | 65 passed; two known non-failing dependency deprecation warnings |
+| Complete backend | 84 passed; same two warnings |
+| Dependency integrity | No broken requirements found |
+| Complete frontend | 2 files, 28 tests passed |
+| ESLint | Passed with zero warnings |
+| Production build | Passed; 22 modules transformed |
+
+Real screen-reader operation, non-English inputs, and long-term repeated use
+remain untested. No Figma, dependency, schema, API-contract, historical report,
+historical prompt, or `main` change was part of this evaluation.
+
+## Assignment 3.3 grounding refinement — November 3, 2026
+
+### Deterministic contract checks
+
+`PerspectiveAlternative` now requires `scenario_anchor` with 1–120 characters.
+After strict output parsing, backend code applies Unicode NFKC, collapses
+whitespace, and case-folds both anchor and submitted scenario; the normalized
+anchor must be a literal substring. This accepts case/whitespace/compatibility
+differences but rejects absent text and paraphrases. The provider instruction
+names the exact four alternative keys, includes one matching example, and
+prohibits presenting invented scenario events as established facts.
+
+Mocked tests observed exact, case-insensitive, whitespace-collapsed, and NFKC
+matches; absent/paraphrased/empty/oversized/unknown/unsafe rejection; one attempt
+with no retry/fallback; no artifact/Seed write; and no scenario/anchor text or
+column in `model_requests`. Vue tests observed the exact anchor, original
+scenario, draft label, warning, and explicit-save boundary. Static Alex and
+Continue-without-Gemini paths made no live-anchor claim.
+
+### Single live application check
+
+Safe health reported service `ok`, schema version 2, temporary database
+available, and key status `configured` without a value. The fixed model, one SDK
+attempt, zero retry, no fallback, and ignored environment file were confirmed.
+
+Exactly one UI submission used the authorized fictional presentation-order
+scenario. It made exactly one provider request and succeeded in one attempt. Two
+alternatives each used the matching anchor `changed the presentation order`.
+The running UI displayed the anchor, original scenario, draft label, assumption
+warning, reasoning, missing context, reflection question, and limitation. It
+selected and saved nothing automatically. Browser warning/error logs were empty;
+no Garden Guide call or provider diagnostic occurred.
+
+The disposable database contained one succeeded Perspective lifecycle row with
+attempt count 1, zero artifacts, zero Seeds, `integrity_check=ok`, and zero
+foreign-key violations. It contained no scenario/anchor column. The validated
+draft still proposed tentative time-constraint and topic-flow details not proved
+by the quotation, so anchoring is not treated as complete semantic grounding.
+
+### Automated results before clean-checkout work
+
+| Check | Observed result |
+| --- | --- |
+| Focused Perspective/grounding | 32 passed; two known non-failing dependency warnings |
+| Prompt 13 scenario regression | 9 passed; same warnings |
+| Garden Guide/instruction regression | 33 passed; same warnings |
+| Complete backend | 93 passed; same warnings |
+| `pip check` | No broken requirements found |
+| Complete frontend | 28 passed across two files |
+| ESLint | Passed with zero warnings |
+| Production build | Passed; 22 modules transformed |
+
+### Public clean-checkout results
+
+The first public clone had no copied ignored state but exposed that the README's
+first check referenced a nonexistent virtual environment and omitted setup,
+installation, initialization, startup, and health steps. The attempt stopped
+without undocumented compensation. A separate README-only commit added those
+commands.
+
+A second unique public clone followed the corrected README. It created a fresh
+Python 3.14 environment; installed the app requirements plus pinned pytest/httpx;
+used `npm ci`; initialized schema version 2; and passed `pip check`, 93 backend
+tests, 28 frontend tests, ESLint, and the 22-module build. Uvicorn and Vite
+started; health returned `ok`, schema 2, database available, and key not
+configured.
+
+The no-key browser path observed a new Focus round/moved target, provider-free
+reviewed Alex output, Support during activity and after model failure, preserved
+custom input, and a safe missing-configuration result. The database recorded one
+zero-attempt failed lifecycle row, zero artifacts, zero Seeds, clean integrity,
+and zero foreign-key violations. Browser warning/error logs were empty. The
+clone's tracked state remained clean and all generated state was ignored.
+
+`npm ci` printed 11 moderate audit findings. No audit fix or dependency change
+was attempted. The two validated temporary-checkout directories could not be
+deleted because execution policy blocked the cleanup command before it ran; no
+private temporary path is committed.
+
+## Assignment 3.3 final submission gate — November 3, 2026
+
+### Public recording and Support checks
+
+Unauthenticated Google Drive view pages returned the corrected public titles
+**PolishedDemo.mp4** for the finished-application link and
+**CodeDemoExplanation.mp4** for the process/failure/evidence/code link. Neither
+page displayed a request-access condition. The embedded video player could not
+decode playback in the automated browser, so page/title/access verification is
+recorded separately from the human recording review. No file was downloaded or
+republished.
+
+The seven official Support destinations were reopened in a normal browser. The
+observed titles remained **Find Support | SAMHSA**, **National 911 Program |
+911.gov**, **988 Suicide & Crisis Lifeline | SAMHSA**, **988 Lifeline Pre
+Conversation Survey**, **Home - FindTreatment.gov**, **FAQs -
+FindTreatment.gov**, and **About - FindTreatment.gov**. SAMHSA/HHS identity,
+the direction to call 911 for an emergency, 988 call/text/chat access, and the
+FindTreatment.gov locator/non-referral boundary remained visible. No cookie
+choice, form, call, text, chat, search, location, or personal data was submitted.
+
+### Final feature-branch results
+
+The final commands used the existing project environments, an explicitly blank
+Gemini environment, fake gateways/stubbed fetch, and disposable databases. They
+did not open the existing runtime database or make a live provider request.
+
+| Check | Observed result |
+| --- | --- |
+| Complete backend pytest | 93 passed; two known non-failing dependency deprecation warnings |
+| Focused Perspective/grounding/scenario/Guide pytest | 74 passed; the same two warnings |
+| `pip check` | No broken requirements found |
+| Disposable SQLite | Schema version 2; nine expected tables; `integrity_check=ok`; zero foreign-key violations |
+| OpenAPI | 22 operations |
+| Complete frontend tests | Two files, 28 tests passed |
+| ESLint | Passed with zero warnings |
+| Production build | Passed; 22 modules transformed |
+| `npm audit --omit=dev` | Zero production vulnerabilities |
+| `git diff --check` and staged equivalent | Required before commit; final result recorded in Prompt 15 and task response |
+
+The warnings are the existing Starlette TestClient/httpx bridge deprecation and
+the Google SDK `_UnionGenericAlias` Python deprecation. No dependency or lockfile
+was changed. The earlier clean checkout's `npm ci` reported 11 moderate
+all-dependency findings; the separately required production-only audit returned
+zero vulnerabilities, and no automatic fix was run.
+
+### Integrity boundary
+
+Before documentation changes, the feature branch and remote matched
+`4099d39c7067ba1ed2ac761492d1f15484ac2568`; local and remote `main` matched
+`769bfcd8581efc8faab9ab64d953fa995c3595f8`; and the tree/index were clean.
+The Part 3.1 and Part 3.2 reports, prompts 01–14, historical Figma evidence,
+dependencies, lockfiles, fixed model, timeout, one-attempt rule, no-fallback
+rule, schema, and API surface remained intact. Ignored environment, SQLite,
+dependency, build, cache, and log state was untracked. Final publication uses
+the authorized documentation-only feature commit and a verified non-fast-
+forward merge; resulting SHAs are reported after publication because a commit
+cannot embed its own SHA.

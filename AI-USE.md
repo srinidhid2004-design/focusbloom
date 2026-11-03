@@ -11,9 +11,9 @@ examples and credential-free mocks are permitted.
 ## Tools and roles
 
 - **OpenAI Codex:** inspected the repository, maintained project records, applied
-  basic branding, designed the proposed state/data/API/model contracts, ran local
-  checks, and managed the authorized feature-branch publication. It did not make
-  clinical decisions.
+  basic branding, designed and refined the state/data/API/model contracts, ran
+  local checks, and managed authorized feature-branch publication. It did not
+  make clinical decisions.
 - **Figma integration:** inspected the existing editable design, reused the water-
   garden variables/styles, created the new FocusBloom section and editable frames,
   and ran programmatic structural checks. Browser control was used only for the
@@ -73,8 +73,16 @@ calms, treats, restores attention, or improves a user.
 
 ## Runtime model contract (implemented and mocked)
 
-Perspective alternatives use at most one request, strict bounded JSON, no advice,
-no automatic save, zero retries, and no provider/model fallback. History RAG uses
+The reviewed Alex Perspective demonstration uses zero provider requests. A
+custom Perspective scenario uses at most one request whose provider context is
+only the normalized fictional scenario. Its strict bounded JSON contains one or
+two alternatives, a required exact scenario quotation, reasoning and missing
+context for each, one reflection question, and the exact coursework limitation.
+Unknown fields, unsafe text, and known unsubmitted Alex-demonstration details are
+rejected. The backend applies NFKC, whitespace collapse, and case folding and
+requires the normalized anchor to be a literal substring of the normalized
+scenario. There is no advice,
+automatic save, retry, or provider/model fallback. History RAG uses
 at most two requests: one SQL proposal followed by one grounded answer only when
 validated rows exist. The backend validates a deliberately small SELECT grammar,
 uses a read-only URI, default-deny authorizer, bound execution/payloads, snapshot
@@ -151,3 +159,103 @@ did not start a chat, call, text, treatment search, or location/personal-data
 submission. Final regression used only disposable temporary databases and made
 no Gemini request. The human authorized the publication and merge workflow;
 Canvas submission remains manual.
+
+## Prompt 12 dynamic Perspective refinement
+
+Codex preserved the three authorized local Focus Garden edits while creating
+`feature/assignment-3-part-3` from the verified main SHA. It separated the
+pre-written Alex demonstration from the dynamic custom route, reduced the
+custom provider context to one normalized fictional `scenario`, expanded the
+strict output contract to reasoning, missing context, and a reflection question,
+and kept the existing explicit-save and request-lifecycle boundaries.
+
+The Focus Garden refinement continues after correct choices, moves the correct
+option between rounds, focuses the refreshed group, uses position-neutral hints,
+and ends only through Stop, Skip, or the existing Support interruption. Tests
+used fake keys, mocked gateway output, stubbed fetch, and temporary databases.
+No environment file, project runtime database, Figma artifact, or live Gemini
+request was accessed during Prompt 12. At that checkpoint, a later separately
+authorized live-model check remained necessary; Prompt 13 performed that bounded
+evaluation as recorded below.
+
+## Prompt 13 scenario evaluation and live variation
+
+Codex added a versioned 15-scenario fictional fixture and deterministic backend
+and frontend tests for continuing/terminal Focus Garden behavior, Support after
+model failures, reviewed and dynamic Perspective paths, explicit artifact and
+Seed persistence, safe failures, duplicate/cancelled/stale responses, and the
+one- or two-call read-only Garden Guide boundary. Mocked and live observations
+are kept separate in `docs/part-3-3-evaluation.md`.
+
+After a safe configuration preflight, Codex made exactly four authorized live
+Perspective submissions: scenario A twice, then scenarios B and C once each.
+Each used one provider request, succeeded without a retry or fallback, satisfied
+the strict bounded schema, and created no artifact or Seed. No live Garden Guide
+request was made. The two A responses differed in wording while preserving the
+same uncertainty boundary. The evaluation also recorded that valid structure is
+not proof of perfect grounding: one response relied on general claims not stated
+in the fictional input. No raw provider payload, credential, personal data, or
+private path was added to repository evidence.
+
+This is coursework response-quality and control-flow evidence only. It does not
+establish therapy, diagnosis, crisis handling, clinical safety, attention,
+emotion, improvement, or effectiveness. Real screen-reader use, non-English
+scenarios, and long-term repeated use remain untested.
+
+## Prompt 14 grounding refinement
+
+Codex converted the Prompt 13 semantic-grounding finding into one deterministic
+control: every custom alternative requires a short `scenario_anchor` that must
+match the submitted scenario after NFKC normalization, whitespace collapsing,
+and case folding. Strict validation still rejects unknown/unsafe output, and an
+anchor mismatch ends the existing single attempt without another grounding
+call, retry, fallback, artifact, or Seed.
+
+Vue now displays the original scenario, exact anchor, **AI-generated draft —
+review before saving.**, and a warning to compare every draft with the original.
+It uses ordinary text interpolation. Static Alex and Continue-without-Gemini
+content remain reviewed and do not claim live anchoring.
+
+After the mocked regression passed, Codex made exactly one authorized live UI
+submission with the fictional presentation-order input. One request succeeded
+in one attempt; both alternatives returned the matching anchor `changed the
+presentation order`. No content was selected or saved automatically, browser
+warning/error logs were empty, and the disposable database had clean integrity,
+one lifecycle row, zero artifacts, and zero Seeds. The response still introduced
+tentative possibilities not proved by the anchor, confirming that quotation
+matching improves reviewability but does not establish complete grounding.
+
+The first public clean checkout then exposed incomplete README setup
+instructions; Codex did not silently compensate. A separate README-only commit
+added the exact Windows environment, pinned test dependency, lockfile install,
+database initialization, startup, and health sequence. A second fresh public
+clone followed it successfully with no key: complete checks passed, the static
+and no-key runtime paths behaved as documented, and browser warning/error logs
+were empty. No ignored local artifact was copied. `npm ci` reported 11 moderate
+audit findings; no audit fix or dependency change was made in this checkpoint.
+
+## Prompt 15 final Assignment 3.3 report and publication
+
+Codex rechecked the corrected public recording mapping without using an
+authenticated Google session: **PolishedDemo.mp4** is the finished-application
+page and **CodeDemoExplanation.mp4** is the process/failure/evidence/code page.
+The public Drive pages exposed the expected titles without a permission-request
+screen. The automated embedded player could not decode playback, so page access
+and title verification remain distinct from the human recording review.
+
+Codex also manually reopened the seven official Support destinations without
+submitting a call, text, chat, search, location, cookie choice, or personal data.
+The expected government/service identities and the separate 911, 988, and
+FindTreatment.gov purposes remained visible.
+
+Final verification used fake gateways, stubbed fetch, and disposable SQLite
+state. It passed 93 backend tests, 74 focused Perspective/grounding/scenario/
+Guide tests, 28 frontend tests, dependency integrity, zero-warning ESLint, a
+22-module production build, a production-only audit with zero vulnerabilities,
+schema-version-2 integrity/foreign-key/table checks, and the 22-operation
+OpenAPI count. Codex created the Assignment 3.3 Canvas report and synchronized
+the active evidence, verification, prompt, and handoff records. No new live
+Gemini request occurred; no key or existing runtime database was read, copied,
+or committed. The authorized Git workflow publishes the feature documentation
+commit and then a verified non-fast-forward merge. Canvas submission remains a
+manual human action.

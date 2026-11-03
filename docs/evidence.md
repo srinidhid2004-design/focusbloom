@@ -23,6 +23,10 @@ publication checks.
 | [`09-focusbloom-vue-experience.md`](../prompts/09-focusbloom-vue-experience.md) | Implement the complete approved Vue experience without live provider or project-database access | Seventeen-state low-input interface, exact API service, activity data, request guard, tests, styles, and continuity updates | Figma/context inspection; frontend tests/lint/build; disposable-database browser checks at narrow and wide viewports; credential/runtime scans |
 | [`10-integrated-live-verification.md`](../prompts/10-integrated-live-verification.md) | Run the bounded fictional integrated flow and make only narrowly authorized corrections | Provider-schema and instruction alignment, successful Perspective/Garden evidence, explicit save/delete evidence, and final verification commit | Full and focused suites; bounded live request ledger; UI, console, read-only database, grounding, focus, Support, and public-safe evidence checks |
 | [`11-final-assignment-report.md`](../prompts/11-final-assignment-report.md) | Finalize the Canvas-ready report and authorized publication without another provider request or runtime-database access | Part 3.2 `report.md`, current Support review, publication evidence, and synchronized continuity records | Seven-source manual review; full and focused suites; OpenAPI/temp-schema inspections; credential/private-path/runtime scans; staged, merge, and public-link gates |
+| [`12-part-3-3-dynamic-perspective.md`](../prompts/12-part-3-3-dynamic-perspective.md) | Separate reviewed demonstration content from a dynamic custom Perspective route and complete the continuing Focus Garden rounds | Scenario-only request, strict reasoning/missing-context/question response, neutral fallback, explicit save/Seed boundary, moving rounds, and synchronized active records | 22 focused Perspective backend tests; 75-test backend suite; 22-test frontend suite; pip/lint/build; mocked 0/1 request counts; repository and protected-file audits |
+| [`13-part-3-3-scenario-evaluation.md`](../prompts/13-part-3-3-scenario-evaluation.md) | Evaluate 15 fictional scenarios and four bounded live Perspective variations | Fifteen-scenario fixture/ledger, mocked cross-case tests, four-request live variation evidence, and explicit semantic-grounding limitation | 84 backend and 28 frontend tests; mocked 0/1/2 call counts; four authorized live Perspective requests; no live Guide call or automatic save |
+| [`14-grounding-clean-checkout-recording-plan.md`](../prompts/14-grounding-clean-checkout-recording-plan.md) | Add exact scenario anchoring, verify it once live, prove clean setup, and plan the final recording | Anchor schema/validation/UI, one-request live evidence, corrected README, clean-checkout record, and recording plan | 93 backend and 28 frontend tests; anchor matrix; one authorized live UI request; second public clean checkout and safe no-key runtime |
+| [`15-final-assignment-3-part-3.md`](../prompts/15-final-assignment-3-part-3.md) | Finalize the report, documentation, verification, publication, public-link audit, and Canvas handoff | Canvas report, final evidence/verification/handoff, corrected recording links, feature documentation commit, and non-fast-forward merge | 93 complete and 74 focused backend tests; 28 frontend tests; pip/lint/build; schema/API; zero production audit vulnerabilities; staged/merge/public-link gates |
 
 ## Consequential design comparison
 
@@ -526,3 +530,226 @@ The Canvas-ready report is `reports/assignment-3-part-2/report.md`. The
 historical root `report.md`, `docs/part-3-1-decisions.md`, prompts 01–06, original
 Figma sections, and assessed commits remain unchanged. Canvas upload is not part
 of this evidence and remains a manual human action.
+
+## Assignment 3.3 dynamic Perspective evidence — November 2, 2026
+
+### Start gate and preserved work
+
+Local `main` and `origin/main` both began at
+`769bfcd8581efc8faab9ab64d953fa995c3595f8`. The only existing working-tree
+changes were the authorized Focus Garden component, activity presentation data,
+and frontend test file; nothing was staged. The work moved to
+`feature/assignment-3-part-3` without changing those three files during the
+switch. `backend/.env`, `data/app.sqlite3`, dependency directories, caches, and
+build output remained ignored and untracked.
+
+### Mocked contract observations
+
+- The reviewed Alex demonstration made zero `/perspective/alternatives`
+  requests and labeled its source **Reviewed fictional example**.
+- A custom UI request contained only an idempotency UUID and the outer-trimmed
+  fictional `scenario`. The backend provider context contained only that
+  scenario. No Alex interpretation, evidence, uncertainty, or observer field was
+  present.
+- Two different fictional inputs received and displayed two different stubbed
+  results. Each visible result paired its alternative with reasoning and missing
+  context and also showed the reflection question, exact limitation, and
+  **Gemini-generated draft** label.
+- Successful generation made one fake-gateway call and saved no artifact.
+  Missing configuration and invalid request structure made zero calls. Failure
+  made one call with zero automatic retries; duplicate idempotency made no
+  additional call.
+- Unknown, oversized, unsafe, malformed, and known unsubmitted Alex-specific
+  output was rejected. Provider-controlled markup/links and raw errors remained
+  outside the UI.
+- Failure preserved the fictional scenario. Continue without Gemini showed
+  general reviewed copy that explicitly said it was not an analysis of the
+  submitted scenario; it did not display Alex content or claim personalization.
+- Next-Step Seed remained user-authored: no Seed write occurred until separate
+  Preview and Save actions, and the mocked write contained the user's situation
+  and action.
+- Focus Garden remained active after correct choices, moved the correct option
+  from index 1 to 2 to 0, focused the refreshed group, and used a position-neutral
+  hint. Stop and Skip were the only tested ordinary terminal actions; neither
+  path created a completed event.
+
+### Automated results
+
+| Check | Observed result |
+| --- | --- |
+| Focused Perspective backend | 22 passed; two non-failing dependency deprecation warnings |
+| Complete backend | 75 passed; same two warnings |
+| Dependency integrity | No broken requirements found |
+| Complete frontend | 2 files, 22 tests passed |
+| ESLint | Passed with zero warnings |
+| Production build | Passed; 22 modules transformed |
+
+Tests used fake keys, an injected fake gateway, stubbed fetch, and disposable
+temporary databases. No runtime database, environment file content, credential,
+Figma artifact, or live provider was accessed. This is contract/application
+evidence, not response-quality, clinical, safety, attention, emotion,
+improvement, or effectiveness evidence. The later separately authorized live
+fictional custom-scenario evaluation is recorded in the next section.
+
+## Assignment 3.3 fifteen-scenario evaluation evidence — November 2, 2026
+
+### Deterministic scenario evidence
+
+The versioned fixture contains exactly 15 fictional scenarios. Focused tests and
+temporary SQLite snapshots observed continuing Focus Garden rounds; explicit
+Stop and Skip; Support independence during activity and after four safe model
+failures; provider-free reviewed output; distinct custom drafts; explicit and
+selective artifact/Seed persistence; missing configuration; single-attempt
+timeout, malformed, unsafe, oversized, and unknown output rejection; stable
+duplicate state; cancelled/stale response protection; and one- or two-request
+read-only Garden Guide behavior.
+
+Cross-case checks passed: Support made no provider/save request and restored
+focus; saved text changed only after explicit actions; and model output did not
+control navigation, activity state, saving, deletion, or Support. Mocked Guide
+mutation/no-match paths made one request and no answer call; grounded success
+made exactly two requests, cited validated row 1, preserved domain snapshots,
+and passed database integrity and foreign-key checks.
+
+### Authorized live variation
+
+The live ledger contained exactly four Perspective submissions and no live
+Garden Guide call. The same fictional scenario was submitted twice (A1/A2),
+followed by two different fictional scenarios (B/C). Each accepted response used
+one provider request and one attempt-count-1 succeeded lifecycle row, met the
+strict schema, and saved nothing. Total live counts were four Perspective
+provider requests, four model rows, zero artifacts, and zero Seeds; database
+integrity was `ok` with zero foreign-key violations.
+
+A1 and A2 varied in wording while preserving the same uncertainty about timing,
+availability, and intent. All four responses were bounded and did not leak the
+reviewed Alex example. A genuinely observed limitation was also retained: the B
+response used general presentation claims not stated in the fictional input,
+showing that strict validation is not proof of ideal semantic grounding.
+
+### Final automated results and limits
+
+| Check | Observed result |
+| --- | --- |
+| Focused backend evaluation | 65 passed; two known non-failing dependency warnings |
+| Complete backend | 84 passed; same two warnings |
+| `pip check` | No broken requirements found |
+| Complete frontend | 28 passed across two files |
+| ESLint | Passed with zero warnings |
+| Production build | Passed; 22 modules transformed |
+
+The detailed per-scenario expected/observed ledger and validated live output are
+in `docs/part-3-3-evaluation.md`; the curated authorization record is
+`prompts/13-part-3-3-scenario-evaluation.md`. Real screen-reader use,
+non-English input, and long-term repeated use remain untested. This is software
+and fictional response-quality evidence, not clinical/safety/effectiveness
+validation.
+
+## Assignment 3.3 grounding-refinement evidence — November 3, 2026
+
+### Mocked evidence
+
+The strict output model now requires a 1–120-character `scenario_anchor` for
+every generated custom alternative. Focused tests observed literal-substring
+acceptance after NFKC, whitespace collapsing, and case folding; they rejected
+absent text, paraphrases, empty/oversized anchors, unknown fields, and unsafe
+advice. Rejection made one fake request with no retry or fallback and created no
+artifact or Seed. SQLite inspection found no scenario/anchor column or text in
+model lifecycle storage.
+
+Stubbed Vue output displayed the original scenario, exact anchor, **AI-generated
+draft — review before saving.**, and the assumption warning. Static Alex and
+neutral fallback content did not claim anchoring. Generation still selected and
+saved nothing, while existing explicit Save/Delete, Prompt 13 scenario, Guide,
+Support, and continuous Focus tests remained green.
+
+### One-request live evidence
+
+One authorized fictional UI submission produced one provider request and one
+succeeded attempt-count-1 lifecycle row. Both alternatives used the validated
+anchor `changed the presentation order`. The UI visibly rendered the original
+scenario, anchors, warning, tentative alternatives, reasoning, missing context,
+question, and coursework limitation. Save remained unavailable until selection;
+nothing was automatically saved. Browser warning/error logs were empty.
+
+There was no diagnostic, retry, fallback, live Guide request, artifact, or Seed.
+Database integrity was `ok` with zero foreign-key violations. The accepted draft
+still offered tentative time-constraint and topic-flow possibilities not proved
+by the anchor. That remaining limitation is public evidence that quotation
+matching reduces one risk but does not prove complete grounding.
+
+### Verification result
+
+Focused counts were 32 Perspective/grounding, nine Prompt 13 scenarios, and 33
+Guide/instruction tests. The complete backend passed 93 with the same two known
+non-failing dependency warnings. `pip check` was clean; frontend tests passed 28;
+ESLint passed with zero warnings; and the build transformed 22 modules.
+
+Detailed implementation/live evidence is in
+`docs/part-3-3-grounding-refinement.md`.
+
+### Public clean-checkout evidence
+
+The first clean public clone contained no ignored local artifact but failed at
+the README's first command because the undocumented virtual environment did not
+exist. Setup/install/database/start/health steps were also missing. The attempt
+stopped without compensation. Commit `Fix clean-checkout instructions` added the
+minimal complete PowerShell sequence.
+
+The second clean public clone used that README alone. Python environment creation,
+requirements plus pinned test-tool installation, `npm ci`, version-2 database
+initialization, backend/frontend checks, Uvicorn/Vite startup, safe health, and
+the required browser path all passed. The tracked clone stayed clean; generated
+dependencies, caches, build output, and database were ignored.
+
+At runtime Focus Garden continued and moved the target; Support interrupted
+without resuming; Alex content remained reviewed/provider-free; a no-key custom
+submission preserved input with one zero-attempt lifecycle row and zero provider
+calls; and Support remained available. Browser warning/error logs were empty,
+database integrity was `ok`, and artifacts/Seeds remained zero. `npm ci` reported
+11 moderate audit findings; no dependency remediation was attempted or claimed.
+
+## Assignment 3.3 finalization evidence — November 3, 2026
+
+### Public links and recording roles
+
+The corrected unauthenticated Drive pages exposed **PolishedDemo.mp4** as the
+finished-application recording and **CodeDemoExplanation.mp4** as the
+process/failure/evidence/code recording. No request-access page appeared. The
+embedded player could not decode playback in the automated browser, so the
+observed public evidence is page access and title; the human-provided corrected
+mapping and recording review establish the course roles. No video was
+downloaded, altered, or republished.
+
+All seven official Support destinations were reopened without submitting data.
+Expected titles, official SAMHSA/HHS or 911.gov identity, the emergency/988
+purposes, and the FindTreatment.gov locator/non-referral boundaries remained
+visible. No call, text, chat, search, location, form, or cookie choice was
+submitted.
+
+### Final report and verification
+
+The self-contained Canvas report is
+`reports/assignment-3-part-3/report.md`. It preserves the submitted Part 3.1 and
+Part 3.2 reports, revisits the design pivot, provides the 15-scenario
+expected/observed table, distinguishes mocked and live evidence, records the
+LIVE B semantic-grounding finding and anchor response, links both recordings,
+and names the manual Canvas upload file.
+
+Final mocked/disposable verification observed 93 complete backend tests, 74
+focused Perspective/grounding/scenario/Guide tests, 28 frontend tests, clean
+`pip check`, zero-warning ESLint, a 22-module build, and zero production-only npm
+audit vulnerabilities. A disposable database reported schema version 2, nine
+expected tables, clean integrity, and zero foreign-key violations; OpenAPI
+retained 22 operations. The two existing upstream deprecation warnings remained
+non-failing. No live Gemini call or existing runtime-database access occurred.
+
+### Publication boundary
+
+The start gate matched the required feature/main SHAs and clean-tree state.
+Protected reports, prompts 01–14, dependencies, lockfiles, fixed provider
+contract, historical evidence, and ignored runtime state remained intact. The
+authorized Git sequence stages only the final Assignment 3.3 documentation,
+publishes the feature commit normally, verifies a non-fast-forward two-parent
+merge on `main`, and publishes `main` without rewriting history. The resulting
+self-referential feature and merge SHAs are reported in the task response.

@@ -20,9 +20,11 @@ the water-garden visual language and historical evidence.
 `entry` offers one primary **Start a Focus Garden** action with secondary access
 to Perspective Studio, History Garden, preferences, and Support. Focus Garden
 uses single-task progressive disclosure. Perspective Studio uses its five
-application-owned steps and exposes a fictional-example path first. Next-Step
-Seed is an optional follow-on. History Garden separates factual cards from the
-optional Garden Guide. Support remains globally available.
+application-owned steps and exposes a reviewed fictional demonstration first. A
+separate one-field custom route previews and submits only its fictional
+scenario. Next-Step Seed is an optional follow-on. History Garden separates
+factual cards from the optional Garden Guide. Support remains globally
+available.
 
 The exact 17-state model, nine-table schema, 22-operation route surface, and two
 Gemini workflows are in `docs/part-3-2-implementation-plan.md`.
@@ -41,6 +43,8 @@ Gemini workflows are in `docs/part-3-2-implementation-plan.md`.
 - One activity/instruction at a time, no required typing, no scoring.
 - Text equivalent for each visual task.
 - Visible `Show me`, `Skip this`, `Stop`, and Support.
+- Correct choices start a new round and move the correct option; group focus and
+  literal status text announce the change. Stop or Skip ends the activity.
 - Explicit reversible difficulty. Standard and No-motion modes are equivalent in
   information and controls.
 - No rapid flash, surprise movement, competitive timer, or penalty.
@@ -49,11 +53,16 @@ Gemini workflows are in `docs/part-3-2-implementation-plan.md`.
 
 - Sequence: interpretation → support → uncertainty → alternative →
   accept/edit/reject/create.
-- Fictional example completes the demonstration without personal data.
-- Custom input uses at most one short initial field; later steps use cards and
-  optional edits without emotional labels.
-- Preview the Gemini payload; continue without Gemini; preserve local work on
-  failure. Save only after explicit preview/Save; provide Delete/Reset.
+- The Alex example is a reviewed, pre-written demonstration without personal
+  data or a provider request. Its evidence, uncertainty, and alternatives remain
+  isolated to that path.
+- Custom input uses exactly one optional short fictional-scenario field. It does
+  not inherit demonstration cards or details.
+- Preview the exact custom scenario sent to Gemini; display an exact returned
+  scenario quotation, reasoning, missing context, a neutral reflection question,
+  limitation, original-scenario comparison, and AI-draft warning;
+  continue without Gemini using non-personalized reviewed copy; preserve local
+  work on failure. Save only after explicit Save; provide Delete and Stop.
 - Optional Lens uses a fictional observer, never a required real name.
 
 ### Next-Step Seed
@@ -114,7 +123,13 @@ atomic. The backend stores no diagnosis, inferred mood/crisis, location,
 authentication, secret, hidden score, prompt, or raw provider error.
 
 Gemini is fixed to `gemini-3.5-flash-lite`, backend only, no retry, no alternate
-provider/model. Perspective alternatives permit one bounded call. History RAG
+provider/model. The reviewed Perspective demonstration permits zero calls. A
+custom scenario permits one bounded call whose context contains only that
+scenario and whose strict output contains one or two alternatives, a required
+scenario anchor, reasoning, missing context, one question, and the exact
+limitation. NFKC/whitespace/case-folded anchor text must be a literal substring
+of the equivalently normalized scenario; rejection causes no additional call.
+History RAG
 permits a SQL-proposal call and, only for validated nonempty rows, a grounded-
 answer call. Application-owned flows work when Gemini is unavailable.
 
@@ -130,6 +145,12 @@ answer call. Application-owned flows work when Gemini is unavailable.
 - **Browser:** all 17 states, keyboard, focus, narrow/wide reflow, zoom, Standard/
   No-motion parity, no-input/no-typing paths, failure preservation, stale
   responses, and Support independence.
+
+Assignment 3.3 separates the provider-free reviewed demonstration from the
+dynamic custom route. Prompt 14 adds deterministic anchor comparison and a
+visible warning while retaining review and explicit Save. Contract and UI checks
+use a fake provider, stubbed fetch, and disposable temporary databases; the one
+separately authorized live check is recorded distinctly from those mocks.
 - **Cross-layer:** compare the same stable IDs and factual values across UI, API,
   and read-only SQLite rows.
 - **Evidence:** record expected and observed results separately; mocks are not
@@ -151,7 +172,12 @@ Exact 390×844 and 1024×768 running viewports, missing configuration, and key
 deterministic flows were inspected with a disposable database. This is not live-
 provider or clinical evidence.
 
-Next, separately authorize and verify live Gemini success for one fictional
-Perspective request and one factual History question, compare stable IDs and
-stored outcomes across UI/API/read-only SQLite, and manually recheck official
-Support sources before submission.
+The one authorized anchored live evaluation is complete. It confirmed matching
+anchors and the visible warning but also retained tentative details not proved
+by the quotation. A corrected README also passed a second fresh public checkout
+through setup, schema initialization, complete checks, startup, safe health, and
+the required no-key UI path. The final recordings and Canvas-ready Assignment
+3.3 report are linked from the repository, and the public Support destinations
+were rechecked on November 3, 2026. Canvas upload is the remaining manual human
+step. None of this establishes complete grounding, clinical safety, or
+effectiveness.

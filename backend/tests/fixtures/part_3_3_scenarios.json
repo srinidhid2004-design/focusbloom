@@ -1,0 +1,152 @@
+[
+  {
+    "id": "SCN-01",
+    "category": "Focus Garden",
+    "fictional_action": "Choose the pointed leaf correctly in two consecutive rounds.",
+    "expected": "The activity remains active and the correct option moves each round.",
+    "classification": "mock",
+    "expected_provider_calls": 0,
+    "expected_persistence": "Attempt events only; no terminal update until Stop or Skip.",
+    "evidence_ref": "frontend/src/App.test.js — keeps the activity active"
+  },
+  {
+    "id": "SCN-02",
+    "category": "Focus Garden",
+    "fictional_action": "Select Stop after a correct round.",
+    "expected": "Exactly one stopped terminal update occurs after the explicit action.",
+    "classification": "mock",
+    "expected_provider_calls": 0,
+    "expected_persistence": "One stopped session and no completed event.",
+    "evidence_ref": "frontend/src/App.test.js — ends only on Stop"
+  },
+  {
+    "id": "SCN-03",
+    "category": "Focus Garden",
+    "fictional_action": "Select Skip this from an active activity.",
+    "expected": "The activity is skipped without score, penalty, or failure label.",
+    "classification": "mock",
+    "expected_provider_calls": 0,
+    "expected_persistence": "One skipped terminal update and no completed event.",
+    "evidence_ref": "frontend/src/App.test.js — lets Skip end"
+  },
+  {
+    "id": "SCN-04",
+    "category": "Support independence",
+    "fictional_action": "Open and close Support after interruption or a safe model failure.",
+    "expected": "Support makes no model request, preserves state, and restores focus.",
+    "classification": "mock",
+    "expected_provider_calls": 0,
+    "expected_persistence": "Only the explicit activity interruption may persist.",
+    "evidence_ref": "frontend/src/App.test.js — Support cross-case tests"
+  },
+  {
+    "id": "SCN-05",
+    "category": "Reviewed Perspective",
+    "fictional_action": "Open the pre-written Alex demonstration and view alternatives.",
+    "expected": "Reviewed static alternatives appear with no Gemini request.",
+    "classification": "mock",
+    "expected_provider_calls": 0,
+    "expected_persistence": "No artifact is saved automatically.",
+    "evidence_ref": "frontend/src/App.test.js — reviewed fictional demonstration"
+  },
+  {
+    "id": "SCN-06",
+    "category": "Custom Perspective",
+    "fictional_action": "Submit the fictional changed-study-room scenario.",
+    "expected": "Scenario-specific mocked output appears without Alex content.",
+    "classification": "mock",
+    "expected_provider_calls": 1,
+    "expected_persistence": "One model lifecycle request; no artifact save.",
+    "evidence_ref": "frontend/src/App.test.js — normalized custom scenario"
+  },
+  {
+    "id": "SCN-07",
+    "category": "Custom Perspective variation",
+    "fictional_action": "Submit fictional window and lamp scenarios separately.",
+    "expected": "Each input displays its distinct fixed mocked result.",
+    "classification": "mock",
+    "expected_provider_calls": 1,
+    "expected_persistence": "No artifact is saved in either generation-only run.",
+    "evidence_ref": "frontend/src/App.test.js — different mocked drafts"
+  },
+  {
+    "id": "SCN-08",
+    "category": "Explicit artifact persistence",
+    "fictional_action": "Generate, explicitly save two reviewed artifacts, then delete one.",
+    "expected": "Generation saves nothing; deletion removes only the selected artifact.",
+    "classification": "mock",
+    "expected_provider_calls": 1,
+    "expected_persistence": "One explicitly selected artifact remains after deletion.",
+    "evidence_ref": "backend/tests/test_part_3_3_scenarios.py — selective artifact deletion"
+  },
+  {
+    "id": "SCN-09",
+    "category": "Next-Step Seed",
+    "fictional_action": "Write a fictional if–then plan, preview, save, then delete it.",
+    "expected": "No write occurs before preview plus Save; deletion is Seed-only.",
+    "classification": "mock",
+    "expected_provider_calls": 0,
+    "expected_persistence": "One explicit Seed is created and then deleted.",
+    "evidence_ref": "frontend/src/App.test.js and backend selective-deletion test"
+  },
+  {
+    "id": "SCN-10",
+    "category": "Missing configuration",
+    "fictional_action": "Submit a custom fictional scenario with no configured key.",
+    "expected": "Input remains visible and no provider call occurs.",
+    "classification": "mock",
+    "expected_provider_calls": 0,
+    "expected_persistence": "A zero-attempt failed lifecycle row only; no saved text.",
+    "evidence_ref": "backend/tests/test_perspective.py and frontend failure test"
+  },
+  {
+    "id": "SCN-11",
+    "category": "Provider failure",
+    "fictional_action": "Submit a custom fictional scenario when the fake provider times out or fails.",
+    "expected": "Input remains visible after one attempt with no automatic retry.",
+    "classification": "mock",
+    "expected_provider_calls": 1,
+    "expected_persistence": "One failed lifecycle row; no artifact or Seed.",
+    "evidence_ref": "backend/tests/test_part_3_3_scenarios.py and Support failure cases"
+  },
+  {
+    "id": "SCN-12",
+    "category": "Output validation",
+    "fictional_action": "Return unknown, oversized, unsafe, or malformed fixed output.",
+    "expected": "The output is rejected and never saved.",
+    "classification": "mock",
+    "expected_provider_calls": 1,
+    "expected_persistence": "One failed lifecycle row; saved-text tables unchanged.",
+    "evidence_ref": "backend/tests/test_perspective.py — bad-result matrix"
+  },
+  {
+    "id": "SCN-13",
+    "category": "Duplicate and stale response",
+    "fictional_action": "Repeat an idempotency key and resolve a cancelled UI request late.",
+    "expected": "No extra provider call or persistence occurs and stale output cannot overwrite fallback state.",
+    "classification": "mock",
+    "expected_provider_calls": 0,
+    "expected_persistence": "No duplicate lifecycle or saved-text write.",
+    "evidence_ref": "backend duplicate test and frontend late-response test"
+  },
+  {
+    "id": "SCN-14",
+    "category": "Garden Guide rejection/no-match",
+    "fictional_action": "Return a mutation proposal or valid query with zero matching rows.",
+    "expected": "The flow stops after request one with protected domain data unchanged.",
+    "classification": "mock",
+    "expected_provider_calls": 1,
+    "expected_persistence": "Only factual request lifecycle state changes; no assistant answer.",
+    "evidence_ref": "backend/tests/test_part_3_3_scenarios.py — Guide snapshots"
+  },
+  {
+    "id": "SCN-15",
+    "category": "Garden Guide success",
+    "fictional_action": "Ask which fictional activity records are saved when one session exists.",
+    "expected": "Validated read-only retrieval is grounded in row 1 after exactly two requests.",
+    "classification": "mock",
+    "expected_provider_calls": 2,
+    "expected_persistence": "One assistant message and two succeeded lifecycle rows; domain data unchanged.",
+    "evidence_ref": "backend/tests/test_part_3_3_scenarios.py — Guide success snapshot"
+  }
+]

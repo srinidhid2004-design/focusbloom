@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { activityPresentations } from '../data/activities.js'
 import { api, newId, utcNow } from '../services/api.js'
 
@@ -19,12 +19,32 @@ const saved = ref(false)
 const startedAt = ref(0)
 const ordinal = ref(0)
 const error = ref('')
+const roundOptions = ref([])
+const roundNumber = ref(1)
+const activityBoard = ref(null)
 const active = computed(() => catalog.value[activityIndex.value] ?? { activity_type: 'different_leaf' })
 const presentation = computed(() => activityPresentations[active.value.activity_type] ?? activityPresentations.different_leaf)
 const duration = computed(() => Math.max(0, Date.now() - startedAt.value))
 const noMotion = computed(() => props.preferences.motion_mode === 'no_motion')
 
 function setState(next) { state.value = next; emit('state', next) }
+
+function prepareFirstRound() {
+  roundNumber.value = 1
+  roundOptions.value = [...presentation.value.options]
+}
+
+function prepareNextRound() {
+  const currentCorrectIndex = roundOptions.value.findIndex((option) => option.correct)
+  const nextCorrectIndex = (currentCorrectIndex + 1) % presentation.value.options.length
+  const correctOption = presentation.value.options.find((option) => option.correct)
+  const nextOptions = presentation.value.options.filter((option) => !option.correct)
+  nextOptions.splice(nextCorrectIndex, 0, correctOption)
+  roundNumber.value += 1
+  roundOptions.value = nextOptions
+  hintVisible.value = false
+}
+
 async function event(eventType, payload = {}) {
   if (!session.value) return
   ordinal.value += 1
@@ -42,6 +62,7 @@ async function start() {
     catalog.value = catalogResult.activities
     const requestedIndex = catalog.value.findIndex((item) => item.activity_type === props.activityType)
     activityIndex.value = requestedIndex >= 0 ? requestedIndex : 0
+    prepareFirstRound()
     startedAt.value = Date.now()
     const result = await api.createSession({
       client_session_id: newId(), activity_type: active.value.activity_type,
@@ -62,14 +83,15 @@ async function choose(option) {
   if (busy.value || saved.value || state.value !== 'focus-active') return
   busy.value = true
   try {
-    await event('attempted', { item_id: option.id, step: 1, result: option.correct ? 'correct' : 'not_correct' })
+    await event('attempted', { item_id: option.id, step: roundNumber.value, result: option.correct ? 'correct' : 'not_correct' })
     if (!option.correct) {
       feedback.value = 'That is a different option. Try again, use Show me, or Skip this.'
       return
     }
-    feedback.value = 'The visible pattern matches.'
-    await event('completed', { item_id: option.id, step: 1, result: 'correct' })
-    await terminal('complete')
+    feedback.value = 'That matches. A new round is ready and the choices have moved.'
+    prepareNextRound()
+    await nextTick()
+    activityBoard.value?.focus({ preventScroll: true })
   } catch (caught) { error.value = caught.message }
   finally { busy.value = false }
 }
@@ -77,7 +99,7 @@ async function choose(option) {
 async function showHint() {
   if (busy.value || state.value !== 'focus-active') return
   hintVisible.value = true
-  try { await event('shown', { item_id: active.value.activity_type, step: 1, result: 'shown' }) }
+  try { await event('shown', { item_id: active.value.activity_type, step: roundNumber.value, result: 'shown' }) }
   catch (caught) { error.value = caught.message }
 }
 
@@ -86,7 +108,7 @@ async function terminal(action, fromSupport = false) {
   saved.value = true
   const finalAction = action === 'interrupt' ? 'interrupt' : action
   try {
-    if (action !== 'complete') await event(action === 'interrupt' ? 'interrupted' : action === 'skip' ? 'skipped' : 'stopped', { item_id: active.value.activity_type, step: 1, result: 'none' })
+    if (action !== 'complete') await event(action === 'interrupt' ? 'interrupted' : action === 'skip' ? 'skipped' : 'stopped', { item_id: active.value.activity_type, step: roundNumber.value, result: 'none' })
     const result = await api.updateSession(session.value.session_id, {
       action: finalAction, expected_version: session.value.version, idempotency_key: newId(),
       ended_at: utcNow(), duration_ms: action === 'skip' ? 0 : duration.value,
@@ -161,13 +183,15 @@ defineExpose({ interruptForSupport })
         Nothing scales, ripples, fades, or translates. Shape, position, and text carry the task.
       </p>
       <div
+        ref="activityBoard"
         class="activity-board"
         role="group"
-        :aria-label="presentation.prompt"
+        tabindex="-1"
+        :aria-label="`${presentation.prompt} New round ${roundNumber}.`"
       >
         <button
-          v-for="option in presentation.options"
-          :key="option.id"
+          v-for="option in roundOptions"
+          :key="`${roundNumber}-${option.id}`"
           class="activity-option"
           type="button"
           :disabled="busy"

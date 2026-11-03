@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+import unicodedata
 from typing import Any, Protocol, TypeVar
 
 import httpx
@@ -33,7 +34,8 @@ FORBIDDEN_OUTPUT = (
     "cure", "improve your mental health", "monitoring you", "crisis",
     "call 911", "call 988", "text 988", "you feel", "you are anxious",
     "you should", "you need to", "you must", "i recommend", "my advice",
-    "will help you", "take action",
+    "will help you", "take action", "definitely intended", "definitely meant",
+    "certainly intended", "certainly meant",
 )
 
 
@@ -46,13 +48,33 @@ def _safe_text(value: str) -> bool:
     )
 
 
-def validate_perspective(value: Any) -> PerspectiveAlternativesOutput:
+def _normalize_scenario_text(value: str) -> str:
+    """Normalize only for deterministic scenario-anchor comparison."""
+
+    return " ".join(unicodedata.normalize("NFKC", value).split()).casefold()
+
+
+def validate_perspective(value: Any, *, scenario: str | None = None) -> PerspectiveAlternativesOutput:
     try:
         output = value if isinstance(value, PerspectiveAlternativesOutput) else PerspectiveAlternativesOutput.model_validate(value)
     except ValidationError as exc:
         raise ProviderProblem("malformed_response") from exc
-    if any(not _safe_text(item.alternative) or not _safe_text(item.factual_basis) for item in output.alternatives):
+    fields = [output.reflection_question]
+    for item in output.alternatives:
+        fields.extend((item.alternative, item.scenario_anchor, item.reasoning, item.missing_context))
+    if any(not _safe_text(field) for field in fields):
         raise ProviderProblem("malformed_response")
+    if scenario is not None:
+        submitted = _normalize_scenario_text(scenario)
+        if any(
+            _normalize_scenario_text(item.scenario_anchor) not in submitted
+            for item in output.alternatives
+        ):
+            raise ProviderProblem("malformed_response")
+        returned = " ".join(fields).casefold()
+        reviewed_details = ("alex", "classmate left", "idea was bad")
+        if any(detail not in submitted and detail in returned for detail in reviewed_details):
+            raise ProviderProblem("malformed_response")
     return output
 
 
@@ -124,9 +146,17 @@ class GoogleGeminiGateway:
             raise ProviderProblem("missing_configuration", 503)
         instructions = {
             "perspective": (
-                "Return only the exact JSON schema. Offer one or two brief alternative interpretations "
-                "and a factual basis for each. Do not give advice, diagnose, infer emotion or crisis, "
-                "claim effectiveness, select an action, or navigate the application."
+                "Return only the exact JSON schema. Based only on the submitted fictional scenario, "
+                "offer one or two brief alternative interpretations. For each, give brief reasoning tied "
+                "only to the submitted text, copy a short exact quotation from that scenario into "
+                "scenario_anchor, and state what context is missing or uncertain. Each alternative object "
+                "must use exactly these keys: alternative, scenario_anchor, reasoning, and missing_context. "
+                "For example, when the scenario contains 'changed the presentation order', use "
+                "scenario_anchor 'changed the presentation order'. Do not introduce scenario-specific "
+                "events as established facts. Ask one neutral "
+                "reflection question. Do not claim what another person definitely intended, give advice, "
+                "diagnose, infer emotion or crisis, present instructions as facts, score, rank, predict, "
+                "claim effectiveness, select an action, navigate the application, or decide what to save."
             ),
             "history_sql": (
                 "Return only the exact JSON schema. Mark requests unrelated to saved FocusBloom records "
@@ -200,7 +230,10 @@ class GoogleGeminiGateway:
             raise ProviderProblem("malformed_response") from exc
 
     def perspective(self, context: dict[str, Any]) -> PerspectiveAlternativesOutput:
-        return validate_perspective(self._generate(purpose="perspective", context=context, schema=PerspectiveAlternativesOutput))
+        return validate_perspective(
+            self._generate(purpose="perspective", context=context, schema=PerspectiveAlternativesOutput),
+            scenario=context.get("scenario"),
+        )
 
     def propose_history_query(self, question: str) -> HistoryQueryProposal:
         return validate_query_proposal(self._generate(purpose="history_sql", context={"question": question}, schema=HistoryQueryProposal))

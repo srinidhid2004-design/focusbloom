@@ -17,12 +17,16 @@ text, clicks, timing, completion, or history.
 
 ## Current milestone
 
-This feature branch implements the approved Assignment 3.2 FocusBloom backend
-and Vue experience. It has the exact nine-table version-2 SQLite schema,
+This feature branch completes the Assignment 3.3 dynamic-Perspective,
+grounding-refinement, evaluation, clean-checkout, and final-report work on top
+of the approved Assignment 3.2 FocusBloom backend and Vue experience. It retains the
+exact nine-table version-2 SQLite schema,
 22-operation `/api` surface, factual activity/session persistence, explicitly
 saved Perspective artifacts and Next-Step Seeds, ordered history conversations,
-lifecycle-only model records, one-request Perspective alternatives, and the
-bounded two-request history RAG workflow. The previous breathing-specific
+lifecycle-only model records, one-request custom Perspective alternatives, and
+the bounded two-request history RAG workflow. The reviewed Alex demonstration
+is now provider-free and completely separated from the custom request. The
+previous breathing-specific
 version-1 implementation remains only in Git history and historical records.
 
 The October 29 integrated checkpoint passed the complete automated regression
@@ -41,6 +45,10 @@ Authoritative active records:
 
 - [Product pivot](docs/focusbloom-pivot.md)
 - [Assignment 3.2 implementation contract](docs/part-3-2-implementation-plan.md)
+- [Assignment 3.3 refinement plan](docs/part-3-3-refinement-plan.md)
+- [Assignment 3.3 grounding refinement](docs/part-3-3-grounding-refinement.md)
+- [Assignment 3.3 recording plan](docs/part-3-3-recording-plan.md)
+- [Assignment 3.3 final report](reports/assignment-3-part-3/report.md)
 - [Design pipeline](docs/design-pipeline.md)
 - [Support resources](docs/support-resources.md)
 - [Verification record](docs/verification.md)
@@ -64,7 +72,8 @@ The entry screen offers a one-tap **Start a Focus Garden** path. Each optional
 activity presents one visual-search task and one visible instruction at a time,
 requires no typing, and keeps **Show me**, **Skip this**, **Stop**, and Support
 available. Activities are unscored and cannot be described as treatment,
-grounding, or clinically effective.
+grounding, or clinically effective. A correct choice starts another round, the
+correct option moves, and the activity stays active until Stop or Skip.
 
 ### Perspective Studio
 
@@ -77,10 +86,18 @@ application and user:
 4. consider an alternative; and
 5. accept, edit, reject, or create an alternative.
 
-**Try a fictional example** completes the demonstration without personal input.
-A custom path uses at most one short initial field. Optional Perspective Lens
-uses a fictional observer. The user sees what would be sent to Gemini, may
-continue without it, and saves nothing without explicit preview and Save.
+The reviewed Alex example completes a pre-written demonstration without personal
+input or a provider request. A clearly separate custom path uses one optional
+fictional scenario field, shows the exact normalized scenario, and makes one
+bounded request only after an explicit Generate action. The strict result has
+one or two alternatives, an exact scenario quotation, per-alternative reasoning
+and missing context, one neutral reflection question, and the exact coursework
+limitation. The backend requires the normalized quotation to be a literal
+substring of the normalized submitted scenario. Output is labeled
+**AI-generated draft — review before saving.** and warns that structured output
+may still introduce assumptions. Optional Perspective Lens uses a
+fictional observer. The user may continue without Gemini using accurately
+labeled neutral reviewed copy, and nothing is saved without explicit Save.
 
 ### Next-Step Seed
 
@@ -127,10 +144,35 @@ The new section contains 14 narrow 390×844 references, two wide 1024×768
 references, reusable editable components, and a 2500×1160 overview. Historical
 Part 3.1 sections remain. Static Figma inspection is not runtime verification.
 
-## Existing foundation and local checks
+## Fresh public checkout and local verification
 
-Prerequisites used by the preserved scaffold are Python 3.14 and Node.js 24.
-From the repository root in PowerShell:
+Prerequisites are Git, Python 3.14 through the Windows `py` launcher, and Node.js
+24 with npm. Use PowerShell. The commands below intentionally create only ignored
+local dependencies, build output, and `data/app.sqlite3`; they do not configure
+Gemini. From the directory that should contain the clone:
+
+```powershell
+git clone https://github.com/srinidhid2004-design/focusbloom.git
+Set-Location focusbloom
+git checkout feature/assignment-3-part-3
+py -3.14 -m venv backend/.venv
+backend/.venv/Scripts/python.exe -m pip install -r backend/requirements.txt pytest==9.1.1 httpx==0.28.1
+Push-Location frontend
+npm ci
+Pop-Location
+```
+
+Initialize a new version-2 local database without a key:
+
+```powershell
+New-Item -ItemType Directory -Force -Path data | Out-Null
+$env:DATABASE_PATH = Join-Path (Resolve-Path data).Path 'app.sqlite3'
+Push-Location backend
+.venv/Scripts/python.exe -c "from app.config import Settings; from app.database import Repository; settings = Settings(_env_file=None); Repository(settings.database_path).initialize(); print('FocusBloom schema version 2 initialized.')"
+Pop-Location
+```
+
+Run the complete local checks:
 
 ```powershell
 backend/.venv/Scripts/python.exe -m pip check
@@ -144,11 +186,40 @@ npm run build
 Pop-Location
 ```
 
+Start the backend in one PowerShell window from the clone root:
+
+```powershell
+$env:DATABASE_PATH = Join-Path (Resolve-Path data).Path 'app.sqlite3'
+Push-Location backend
+.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+Start the frontend in a second PowerShell window from the clone root:
+
+```powershell
+Push-Location frontend
+npm run dev -- --host 127.0.0.1
+```
+
+From a third PowerShell window, confirm safe health and then open the application:
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8000/api/health | ConvertTo-Json
+Start-Process http://127.0.0.1:5173/
+```
+
+Expected health values are service `ok`, schema version `2`, database
+`available`, and Gemini key `not configured`. With no key, Focus Garden, the
+static reviewed Perspective example, History, saved-text controls, and Support
+remain available. A custom Perspective submission preserves the fictional input
+and shows the safe missing-configuration path without a provider call. Stop each
+development server with `Ctrl+C`; `Pop-Location` may then restore each terminal's
+previous directory.
+
 The backend tests initialize version-2 databases only in temporary test
-directories. Prompt 10 separately initialized the approved ignored project
-runtime database and made one bounded live request from the supplied fictional
-Perspective example. The Vue application implements the selected FocusBloom
-experience and the exact approved backend contracts.
+directories. The explicit initialization command above creates the ignored local
+coursework database for runtime verification. The Vue application implements the
+selected FocusBloom experience and the exact approved backend contracts.
 
 ## Technology and security boundary
 
@@ -198,7 +269,70 @@ read-only protections remain unchanged.
 
 The Canvas-ready Assignment 3.2 report is
 [`reports/assignment-3-part-2/report.md`](reports/assignment-3-part-2/report.md).
-Official Support sources were manually rechecked on October 29, 2026, and the
-final feature regression passed without a provider request or runtime-database
-access. Canvas upload remains a manual human action. No key is needed for
+Official Support sources were manually rechecked again on November 3, 2026, and
+the final feature regression passed without a provider request or runtime-
+database access. Canvas upload remains a manual human action. No key is needed for
 ordinary Focus Garden, History browsing, saved-text controls, or Support.
+
+## Assignment 3.3 refinement status
+
+The reviewed Alex demonstration now uses zero provider requests. A custom
+Perspective request contains only an idempotency UUID and one normalized
+fictional `scenario`; Gemini receives only that scenario. Strict output requires
+one or two alternatives with reasoning and missing context, one neutral
+reflection question, and the exact coursework limitation. Unknown, oversized,
+unsafe, malformed, or unsubmitted Alex-specific output is rejected, and no
+generation automatically saves an artifact or Seed.
+
+Prompt 13 evaluated 15 fictional scenarios with mocks and temporary databases,
+including Support independence, explicit persistence, bounded model control,
+duplicates, cancellation/stale-result handling, and the existing read-only
+Garden Guide limits. It then made exactly four separately authorized live
+Perspective submissions: the same scenario twice and two different scenarios
+once each. All four passed the strict response contract, varied in wording, made
+one provider request apiece with no retry, and saved no artifact or Seed. No live
+Garden Guide request occurred.
+
+The live comparison found useful bounded variation while also showing that
+structural validation does not guarantee perfect semantic grounding: one result
+used general claims not present in the fictional input. This is response-quality
+evidence only, not clinical, safety, attention, emotion, improvement, or
+effectiveness evidence. The complete evaluation regression passed 84 backend
+tests and 28 frontend tests; dependency integrity, ESLint with zero warnings,
+and the production build also passed. Details are in
+[`docs/part-3-3-evaluation.md`](docs/part-3-3-evaluation.md).
+
+Prompt 14 responded with the required `scenario_anchor`, deterministic NFKC/
+whitespace/case-folded substring validation, and visible original-scenario,
+anchor, draft-label, and assumption-warning UI. Exactly one authorized live UI
+submission produced one succeeded attempt-count-1 request; both alternatives
+used the matching anchor `changed the presentation order`. Nothing was selected
+or saved automatically, browser warning/error logs were empty, and database
+integrity remained clean. The accepted result still proposed tentative details
+not proved by the quotation, so anchoring is a review aid rather than a complete
+grounding or safety guarantee.
+
+Public clean-checkout verification first exposed the missing setup sequence in
+this README. After the separate README-only correction, a second fresh public
+clone completed environment/dependency setup, schema initialization, all tests,
+lint/build, service startup, safe health, Focus rounds, static Perspective,
+independent Support, and the no-key custom failure path using these instructions
+alone. No local key or ignored artifact was copied into that checkout.
+
+## Assignment 3.3 final submission
+
+The Canvas-ready final report is
+[`reports/assignment-3-part-3/report.md`](reports/assignment-3-part-3/report.md).
+It links the public repository evidence and the corrected public recordings:
+
+- [Finished application — PolishedDemo.mp4](https://drive.google.com/file/d/1NOoCNPntjhuIkGoTXebhecTpugK4Zg28/view?usp=sharing)
+- [Process, failure, evidence, and code — CodeDemoExplanation.mp4](https://drive.google.com/file/d/1sKYhp84QHkIQUOjFh-piDj1nAfjkcZqs/view?usp=sharing)
+
+Final feature verification passed 93 backend tests, 74 focused backend tests,
+28 frontend tests, `pip check`, ESLint with zero warnings, a 22-module
+production build, and a production-only npm audit with zero vulnerabilities. A
+disposable database reported schema version 2, nine expected tables, clean
+integrity, zero foreign-key violations, and the OpenAPI document retained 22
+operations. This finalization made no live Gemini request and did not open the
+existing runtime database. Real screen-reader use, non-English scenarios, and
+long-term repeated use remain untested.

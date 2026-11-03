@@ -15,10 +15,7 @@ describe('approved frontend API service', () => {
     globalThis.fetch = vi.fn(() => response({ outcome: 'success', alternatives: { alternatives: [] } }))
     const input = {
       idempotency_key: '11111111-1111-4111-8111-111111111111',
-      interpretation: 'A fictional interpretation',
-      supporting_evidence: ['Visible timing'],
-      uncertainty: ['Reason unknown'],
-      observer_mode: 'none',
+      scenario: 'A fictional project update was not answered before a meeting.',
     }
     await api.perspectiveAlternatives(input)
     const [, options] = globalThis.fetch.mock.calls[0]

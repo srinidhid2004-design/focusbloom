@@ -25,8 +25,11 @@ class FakeGateway:
         self.perspective_result: Any = PerspectiveAlternativesOutput(
             alternatives=[PerspectiveAlternative(
                 alternative="The visible facts could support more than one interpretation.",
-                factual_basis="The provided cards do not establish only one explanation.",
+                scenario_anchor="fictional",
+                reasoning="The submitted scenario states an outcome but not a single cause.",
+                missing_context="The submitted scenario does not include the other relevant circumstances.",
             )],
+            reflection_question="What other context would be needed before selecting one interpretation?",
             limitation="Coursework prototype; not therapy or medical advice.",
         )
         self.query_result: Any = HistoryQueryProposal(
