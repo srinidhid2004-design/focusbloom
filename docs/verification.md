@@ -1322,5 +1322,29 @@ by the quotation, so anchoring is not treated as complete semantic grounding.
 | ESLint | Passed with zero warnings |
 | Production build | Passed; 22 modules transformed |
 
-Public clean-checkout verification follows only after the grounding commit is
-published. It is not claimed by this pre-commit section.
+### Public clean-checkout results
+
+The first public clone had no copied ignored state but exposed that the README's
+first check referenced a nonexistent virtual environment and omitted setup,
+installation, initialization, startup, and health steps. The attempt stopped
+without undocumented compensation. A separate README-only commit added those
+commands.
+
+A second unique public clone followed the corrected README. It created a fresh
+Python 3.14 environment; installed the app requirements plus pinned pytest/httpx;
+used `npm ci`; initialized schema version 2; and passed `pip check`, 93 backend
+tests, 28 frontend tests, ESLint, and the 22-module build. Uvicorn and Vite
+started; health returned `ok`, schema 2, database available, and key not
+configured.
+
+The no-key browser path observed a new Focus round/moved target, provider-free
+reviewed Alex output, Support during activity and after model failure, preserved
+custom input, and a safe missing-configuration result. The database recorded one
+zero-attempt failed lifecycle row, zero artifacts, zero Seeds, clean integrity,
+and zero foreign-key violations. Browser warning/error logs were empty. The
+clone's tracked state remained clean and all generated state was ignored.
+
+`npm ci` printed 11 moderate audit findings. No audit fix or dependency change
+was attempted. The two validated temporary-checkout directories could not be
+deleted because execution policy blocked the cleanup command before it ran; no
+private temporary path is committed.

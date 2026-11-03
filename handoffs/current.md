@@ -72,8 +72,11 @@ semantic grounding is not claimed.
 ## Remaining verification boundary
 
 No additional live provider request is permitted or needed for this checkpoint.
-Public clean-checkout verification follows the grounding commit. Real
-screen-reader use, non-English scenarios, long-term repeated use, recording,
+Public clean-checkout verification is complete after one observed README gap and
+a separate README-only correction. The second fresh public clone passed setup,
+schema initialization, complete checks, startup, safe no-key health, Focus/
+static Perspective/Support/missing-configuration paths, and console inspection.
+Real screen-reader use, non-English scenarios, long-term repeated use, recording,
 final Assignment 3.3 reporting, merge, and Canvas work remain separate tasks.
 Nothing here is therapy, diagnosis, crisis,
 attention/emotion, improvement, effectiveness, or clinical-safety validation.
@@ -85,3 +88,9 @@ Figma sections, prior evidence images, and
 `reports/assignment-3-part-2/report.md` remain unchanged. This handoff records
 the feature contents and base; the final task response and feature-branch Git
 history record the resulting checkpoint commit and push SHA.
+
+The two uniquely named clean-checkout directories remain under the Windows
+temporary directory because execution policy blocked the validated cleanup
+command before it ran. Their absolute paths are not committed. The second clone
+also reported 11 moderate npm audit findings during `npm ci`; no audit fix or
+dependency change was part of this checkpoint.

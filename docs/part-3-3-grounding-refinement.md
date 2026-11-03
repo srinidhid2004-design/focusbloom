@@ -146,3 +146,60 @@ The alternatives still introduced tentative time-constraint and flow
 possibilities not established by the anchor. This is the intended remaining
 limitation: a matching quotation improves reviewability but does not prove that
 every generated statement is supported.
+
+## Public clean-checkout verification
+
+The first unique public clone correctly contained no environment file, runtime
+database, virtual environment, `node_modules`, cache, or build output. Following
+the then-current README stopped at its first check because
+`backend/.venv/Scripts/python.exe` did not exist. The README also omitted
+dependency installation, lockfile installation, database initialization,
+startup, and health commands. No undocumented command was used to compensate.
+
+A separate README-only commit added this exact setup sequence:
+
+```powershell
+git clone https://github.com/srinidhid2004-design/focusbloom.git
+Set-Location focusbloom
+git checkout feature/assignment-3-part-3
+py -3.14 -m venv backend/.venv
+backend/.venv/Scripts/python.exe -m pip install -r backend/requirements.txt pytest==9.1.1 httpx==0.28.1
+Push-Location frontend
+npm ci
+Pop-Location
+```
+
+The second unique public clone followed those commands, then the documented
+database command:
+
+```powershell
+New-Item -ItemType Directory -Force -Path data | Out-Null
+$env:DATABASE_PATH = Join-Path (Resolve-Path data).Path 'app.sqlite3'
+Push-Location backend
+.venv/Scripts/python.exe -c "from app.config import Settings; from app.database import Repository; settings = Settings(_env_file=None); Repository(settings.database_path).initialize(); print('FocusBloom schema version 2 initialized.')"
+Pop-Location
+```
+
+It then followed the documented `pip check`, complete backend pytest, `npm test`,
+ESLint, and build commands; all passed with the same results as the working
+checkout. The documented Uvicorn and Vite commands started successfully. Safe
+health returned service `ok`, schema version `2`, database `available`, and key
+`not configured`.
+
+The no-key running walkthrough observed a new Focus round and moved target,
+Support interruption without resume, reviewed provider-free Alex alternatives,
+preserved custom text through missing configuration, and Support after that
+failure. The missing-configuration request created one zero-attempt lifecycle
+row and no provider call, artifact, or Seed. Browser warning/error logs were
+empty; database integrity was `ok` with zero foreign-key violations. Both
+services were stopped through their own sessions.
+
+The clean clone remained tracked-clean. Only the README-documented virtual
+environment, dependency folder, caches, build output, and database appeared as
+ignored local state. `npm ci` also reported 11 moderate audit findings; no audit
+fix or dependency change was attempted because it was outside this checkpoint.
+
+The validated recursive cleanup command was blocked by the execution policy
+before deletion. Both uniquely named checkout directories therefore remain
+under the operating-system temporary directory; their private absolute paths
+are intentionally not committed and are reported only in the task response.

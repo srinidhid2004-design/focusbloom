@@ -310,3 +310,10 @@ or saved automatically, browser warning/error logs were empty, and database
 integrity remained clean. The accepted result still proposed tentative details
 not proved by the quotation, so anchoring is a review aid rather than a complete
 grounding or safety guarantee.
+
+Public clean-checkout verification first exposed the missing setup sequence in
+this README. After the separate README-only correction, a second fresh public
+clone completed environment/dependency setup, schema initialization, all tests,
+lint/build, service startup, safe health, Focus rounds, static Perspective,
+independent Support, and the no-key custom failure path using these instructions
+alone. No local key or ignored artifact was copied into that checkout.

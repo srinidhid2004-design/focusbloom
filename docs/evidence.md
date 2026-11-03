@@ -683,5 +683,25 @@ non-failing dependency warnings. `pip check` was clean; frontend tests passed 28
 ESLint passed with zero warnings; and the build transformed 22 modules.
 
 Detailed implementation/live evidence is in
-`docs/part-3-3-grounding-refinement.md`. Public clean-checkout evidence is added
-only after the required post-push verification; it is not inferred here.
+`docs/part-3-3-grounding-refinement.md`.
+
+### Public clean-checkout evidence
+
+The first clean public clone contained no ignored local artifact but failed at
+the README's first command because the undocumented virtual environment did not
+exist. Setup/install/database/start/health steps were also missing. The attempt
+stopped without compensation. Commit `Fix clean-checkout instructions` added the
+minimal complete PowerShell sequence.
+
+The second clean public clone used that README alone. Python environment creation,
+requirements plus pinned test-tool installation, `npm ci`, version-2 database
+initialization, backend/frontend checks, Uvicorn/Vite startup, safe health, and
+the required browser path all passed. The tracked clone stayed clean; generated
+dependencies, caches, build output, and database were ignored.
+
+At runtime Focus Garden continued and moved the target; Support interrupted
+without resuming; Alex content remained reviewed/provider-free; a no-key custom
+submission preserved input with one zero-attempt lifecycle row and zero provider
+calls; and Support remained available. Browser warning/error logs were empty,
+database integrity was `ok`, and artifacts/Seeds remained zero. `npm ci` reported
+11 moderate audit findings; no dependency remediation was attempted or claimed.

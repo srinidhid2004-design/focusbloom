@@ -224,3 +224,12 @@ warning/error logs were empty, and the disposable database had clean integrity,
 one lifecycle row, zero artifacts, and zero Seeds. The response still introduced
 tentative possibilities not proved by the anchor, confirming that quotation
 matching improves reviewability but does not establish complete grounding.
+
+The first public clean checkout then exposed incomplete README setup
+instructions; Codex did not silently compensate. A separate README-only commit
+added the exact Windows environment, pinned test dependency, lockfile install,
+database initialization, startup, and health sequence. A second fresh public
+clone followed it successfully with no key: complete checks passed, the static
+and no-key runtime paths behaved as documented, and browser warning/error logs
+were empty. No ignored local artifact was copied. `npm ci` reported 11 moderate
+audit findings; no audit fix or dependency change was made in this checkpoint.

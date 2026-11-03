@@ -47,10 +47,19 @@ draft still offered tentative time-constraint and topic-flow possibilities not
 established by the quotation, so visible review and explicit Save remain
 necessary.
 
-## Remaining checkpoint work
+## Clean-checkout result and remaining work
 
-The source/live correction is ready for the required feature-branch commit.
-Clean-checkout verification must then follow the public README exactly. Any
-README correction discovered there must be a separate documentation-only commit
-followed by a second fresh checkout. The recording plan is
-`docs/part-3-3-recording-plan.md`.
+The first fresh public clone stopped because the README referenced an uncreated
+virtual environment and omitted setup/install/database/start/health steps. Codex
+did not compensate silently. The required README-only commit added those exact
+PowerShell instructions. A second fresh clone then passed environment creation,
+dependency/lockfile installation, schema initialization, complete checks,
+backend/frontend startup, safe no-key health, required UI paths, database
+integrity, and console inspection using the README alone.
+
+No local key or ignored artifact was copied. `npm ci` reported 11 moderate audit
+findings; no dependency remediation occurred. The validated cleanup command was
+blocked before deletion, so the two unique OS-temporary checkout directories are
+reported outside committed evidence. The recording plan is
+`docs/part-3-3-recording-plan.md`; recording execution, final reporting, merge,
+and Canvas submission remain separate work.
