@@ -1216,7 +1216,56 @@ behavior remained covered by the full frontend suite.
 | `npm run build` | Passed; 22 modules transformed |
 
 All databases used by tests were temporary. All provider behavior was fake or
-stubbed. A future separately authorized live request is required only to assess
-whether one fictional custom response is relevant and tailored under the new
-schema. It would not validate therapy, diagnosis, crisis handling, clinical
-safety, attention, emotion, improvement, or effectiveness.
+stubbed. At the Prompt 12 checkpoint, the separately authorized live evaluation
+recorded in the next section had not yet occurred. Such evaluation does not
+validate therapy, diagnosis, crisis handling, clinical safety, attention,
+emotion, improvement, or effectiveness.
+
+## Assignment 3.3 fifteen-scenario evaluation — November 2, 2026
+
+### Scope and live-request ledger
+
+The evaluation used the versioned fictional fixture in
+`backend/tests/fixtures/part_3_3_scenarios.json` and the complete matrix in
+`docs/part-3-3-evaluation.md`. Mocked checks covered all 15 required scenarios
+and three cross-case behaviors: Support independence, explicit persistence, and
+bounded model control. Tests used fake credentials, injected gateways, stubbed
+fetch, and temporary SQLite databases.
+
+After preflight, exactly four live Perspective submissions were deliberately
+made: A1, A2, B, and C. A1 and A2 repeated the same fictional scenario; B and C
+used different fictional scenarios. Each submission returned HTTP 200, made one
+provider request, stored one succeeded attempt-count-1 lifecycle row, passed the
+strict validator, and saved no artifact or Seed. There were four total live
+Perspective provider requests and four lifecycle rows, with zero automatic
+retries and no fallback. No live Garden Guide request occurred.
+
+The disposable live database reported `integrity_check=ok`, zero foreign-key
+violations, zero artifacts, and zero Seeds. It retained request lifecycle
+metadata only; repository evidence does not include raw provider payloads,
+credentials, personal data, or private paths.
+
+### Observed quality boundary
+
+Both A responses varied in wording while retaining alternatives, factual bases,
+missing context, a reflection question, and the fixed limitation. All four were
+relevant and bounded, but strict structural acceptance did not prove perfect
+semantic grounding: the B response used general claims such as presentation
+changes being common rather than relying only on the supplied scenario. This
+finding is recorded rather than silently relabeled as success. It is not a
+clinical, safety, or effectiveness conclusion.
+
+### Commands and observed results
+
+| Check | Observed result |
+| --- | --- |
+| Focused Perspective, Prompt 13, and Guide backend tests | 65 passed; two known non-failing dependency deprecation warnings |
+| Complete backend | 84 passed; same two warnings |
+| Dependency integrity | No broken requirements found |
+| Complete frontend | 2 files, 28 tests passed |
+| ESLint | Passed with zero warnings |
+| Production build | Passed; 22 modules transformed |
+
+Real screen-reader operation, non-English inputs, and long-term repeated use
+remain untested. No Figma, dependency, schema, API-contract, historical report,
+historical prompt, or `main` change was part of this evaluation.

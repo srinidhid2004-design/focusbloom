@@ -585,5 +585,59 @@ Tests used fake keys, an injected fake gateway, stubbed fetch, and disposable
 temporary databases. No runtime database, environment file content, credential,
 Figma artifact, or live provider was accessed. This is contract/application
 evidence, not response-quality, clinical, safety, attention, emotion,
-improvement, or effectiveness evidence. A later separately authorized live
-fictional custom-scenario evaluation remains necessary to assess model relevance.
+improvement, or effectiveness evidence. The later separately authorized live
+fictional custom-scenario evaluation is recorded in the next section.
+
+## Assignment 3.3 fifteen-scenario evaluation evidence — November 2, 2026
+
+### Deterministic scenario evidence
+
+The versioned fixture contains exactly 15 fictional scenarios. Focused tests and
+temporary SQLite snapshots observed continuing Focus Garden rounds; explicit
+Stop and Skip; Support independence during activity and after four safe model
+failures; provider-free reviewed output; distinct custom drafts; explicit and
+selective artifact/Seed persistence; missing configuration; single-attempt
+timeout, malformed, unsafe, oversized, and unknown output rejection; stable
+duplicate state; cancelled/stale response protection; and one- or two-request
+read-only Garden Guide behavior.
+
+Cross-case checks passed: Support made no provider/save request and restored
+focus; saved text changed only after explicit actions; and model output did not
+control navigation, activity state, saving, deletion, or Support. Mocked Guide
+mutation/no-match paths made one request and no answer call; grounded success
+made exactly two requests, cited validated row 1, preserved domain snapshots,
+and passed database integrity and foreign-key checks.
+
+### Authorized live variation
+
+The live ledger contained exactly four Perspective submissions and no live
+Garden Guide call. The same fictional scenario was submitted twice (A1/A2),
+followed by two different fictional scenarios (B/C). Each accepted response used
+one provider request and one attempt-count-1 succeeded lifecycle row, met the
+strict schema, and saved nothing. Total live counts were four Perspective
+provider requests, four model rows, zero artifacts, and zero Seeds; database
+integrity was `ok` with zero foreign-key violations.
+
+A1 and A2 varied in wording while preserving the same uncertainty about timing,
+availability, and intent. All four responses were bounded and did not leak the
+reviewed Alex example. A genuinely observed limitation was also retained: the B
+response used general presentation claims not stated in the fictional input,
+showing that strict validation is not proof of ideal semantic grounding.
+
+### Final automated results and limits
+
+| Check | Observed result |
+| --- | --- |
+| Focused backend evaluation | 65 passed; two known non-failing dependency warnings |
+| Complete backend | 84 passed; same two warnings |
+| `pip check` | No broken requirements found |
+| Complete frontend | 28 passed across two files |
+| ESLint | Passed with zero warnings |
+| Production build | Passed; 22 modules transformed |
+
+The detailed per-scenario expected/observed ledger and validated live output are
+in `docs/part-3-3-evaluation.md`; the curated authorization record is
+`prompts/13-part-3-3-scenario-evaluation.md`. Real screen-reader use,
+non-English input, and long-term repeated use remain untested. This is software
+and fictional response-quality evidence, not clinical/safety/effectiveness
+validation.

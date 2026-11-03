@@ -223,11 +223,20 @@ reflection question, and the exact coursework limitation. Unknown, oversized,
 unsafe, malformed, or unsubmitted Alex-specific output is rejected, and no
 generation automatically saves an artifact or Seed.
 
-Checkpoint verification uses fake keys, an injected fake gateway, stubbed fetch,
-and disposable test databases only. It does not access `backend/.env` or the
-project runtime database and makes no live provider request. A later separately
-authorized live check is still needed to evaluate the relevance of one fictional
-custom response; it would not be clinical, safety, or effectiveness evidence.
-The complete checkpoint regression passed 75 backend tests and 22 frontend
-tests; dependency integrity, ESLint with zero warnings, and the production build
-also passed.
+Prompt 13 evaluated 15 fictional scenarios with mocks and temporary databases,
+including Support independence, explicit persistence, bounded model control,
+duplicates, cancellation/stale-result handling, and the existing read-only
+Garden Guide limits. It then made exactly four separately authorized live
+Perspective submissions: the same scenario twice and two different scenarios
+once each. All four passed the strict response contract, varied in wording, made
+one provider request apiece with no retry, and saved no artifact or Seed. No live
+Garden Guide request occurred.
+
+The live comparison found useful bounded variation while also showing that
+structural validation does not guarantee perfect semantic grounding: one result
+used general claims not present in the fictional input. This is response-quality
+evidence only, not clinical, safety, attention, emotion, improvement, or
+effectiveness evidence. The complete evaluation regression passed 84 backend
+tests and 28 frontend tests; dependency integrity, ESLint with zero warnings,
+and the production build also passed. Details are in
+[`docs/part-3-3-evaluation.md`](docs/part-3-3-evaluation.md).

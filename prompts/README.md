@@ -20,8 +20,10 @@ link verification.
 
 Assignment 3.3 retains the submitted report unchanged. Its first checkpoint
 separates the provider-free reviewed Alex demonstration from a one-field custom
-fictional route and verifies the new contract with mocks only. A future live
-custom-scenario evaluation remains separately authorized work.
+fictional route. Prompt 13 then evaluates 15 fictional scenarios with mocks and
+makes exactly four authorized live Perspective submissions for repeated/different
+scenario variation. No live Garden Guide call, automatic save, retry, fallback,
+or historical-evidence change occurs.
 
 ## Redaction and safety rules
 
@@ -51,9 +53,10 @@ custom-scenario evaluation remains separately authorized work.
 | [`10-integrated-live-verification.md`](10-integrated-live-verification.md) | 2026-10-29 | Run bounded integrated regression, diagnose narrow provider/instruction incompatibilities, and verify the complete live application flow | The equivalent enum correction enabled Perspective; an instruction-only SQL-grammar alignment preserved the validator and enabled two-request grounded Garden retrieval, artifact deletion with Seed retention, Support/focus checks, and clean final suites |
 | [`11-final-assignment-report.md`](11-final-assignment-report.md) | 2026-10-29 | Create the Canvas-ready Part 3.2 report, reverify official Support sources, run final regression, and publish through the authorized feature/merge workflow | Seven official sources manually confirmed; complete suites and repository audits passed; final report and continuity records prepared without provider or runtime-database access |
 | [`12-part-3-3-dynamic-perspective.md`](12-part-3-3-dynamic-perspective.md) | 2026-11-02 | Separate the reviewed Alex demonstration from a genuinely dynamic one-field custom Perspective route and finish the looping Focus Garden refinement | Strict scenario-only request and richer bounded response, neutral failure fallback, explicit save/Seed boundary, moving Focus rounds, and complete mocked regression; no live provider, runtime database, credential, dependency, schema, Figma, report, or main change |
+| [`13-part-3-3-scenario-evaluation.md`](13-part-3-3-scenario-evaluation.md) | 2026-11-02 | Evaluate 15 fictional scenarios and compare bounded live variation without changing the product contract | Mocked cross-case controls passed; exactly four live Perspective requests varied repeated/different scenarios with no retry, fallback, automatic save, or live Garden Guide call; semantic-grounding and screen-reader limitations recorded |
 
 ## Future numbering
 
 Use two-digit sequential names with a short purpose, such as
-`12-next-approved-checkpoint.md`. Add one index row per curated prompt record.
+`14-next-approved-checkpoint.md`. Add one index row per curated prompt record.
 Prompt records are curated evidence, not full chat exports.

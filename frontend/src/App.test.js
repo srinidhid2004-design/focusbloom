@@ -19,7 +19,13 @@ function json(body, status = 200) {
   }))
 }
 
-function installApi({ noMotion = false, modelFailure = false, populated = false, perspectiveResult = null } = {}) {
+function installApi({
+  noMotion = false,
+  modelFailure = false,
+  populated = false,
+  perspectiveResult = null,
+  perspectiveDeferred = null,
+} = {}) {
   const session = {
     session_id: 'session-1',
     activity_type: 'different_leaf',
@@ -60,7 +66,13 @@ function installApi({ noMotion = false, modelFailure = false, populated = false,
     if (path.includes('/perspective-artifacts?')) return json({ outcome: 'success', artifacts: [], next_cursor: null })
     if (path.includes('/next-step-seeds?')) return json({ outcome: 'success', seeds: [], next_cursor: null })
     if (path.endsWith('/perspective/alternatives')) {
-      if (modelFailure) return json({ outcome: 'missing_configuration', message: 'Gemini is not configured.' }, 503)
+      if (perspectiveDeferred) return perspectiveDeferred({ body, options })
+      if (modelFailure) {
+        const failure = modelFailure === true
+          ? { outcome: 'missing_configuration', message: 'Gemini is not configured.', status: 503 }
+          : modelFailure
+        return json({ outcome: failure.outcome, message: failure.message }, failure.status)
+      }
       const output = perspectiveResult?.(body.scenario) ?? {
         alternatives: [{
           alternative: 'The fictional timing may be unrelated.',
@@ -181,16 +193,23 @@ describe('FocusBloom Vue experience', () => {
 
   it('renders no-motion with identical controls and interrupts before opening Support', async () => {
     installApi({ noMotion: true })
-    const wrapper = mount(App)
+    const wrapper = mount(App, { attachTo: document.body })
     await flushPromises()
     await wrapper.get('.entry-view .primary').trigger('click')
     await flushPromises()
     expect(wrapper.get('[data-state="focus-active"]').classes()).toContain('no-motion')
     expect(wrapper.text()).toContain('Nothing scales, ripples, fades, or translates')
-    await wrapper.get('.support-button').trigger('click')
+    const supportButton = wrapper.get('.support-button')
+    supportButton.element.focus()
+    await supportButton.trigger('click')
     await flushPromises()
     expect(wrapper.get('[data-state="support-open"]').exists()).toBe(true)
     expect(wrapper.get('[data-state="focus-stopped"]').text()).toContain('interrupted')
+    await wrapper.get('[data-state="support-open"] .primary').trigger('click')
+    await flushPromises()
+    expect(wrapper.get('[data-state="focus-stopped"]').text()).toContain('did not resume or complete automatically')
+    expect(document.activeElement).toBe(supportButton.element)
+    wrapper.unmount()
   })
 
   it('keeps the reviewed fictional demonstration distinct and makes no Gemini request', async () => {
@@ -306,6 +325,124 @@ describe('FocusBloom Vue experience', () => {
     expect(globalThis.fetch.mock.calls.filter(([url, request]) => String(url).endsWith('/perspective-artifacts') && request?.method === 'POST')).toHaveLength(0)
   })
 
+  it.each([
+    ['missing configuration', { outcome: 'missing_configuration', message: 'Gemini is not configured.', status: 503 }],
+    ['timeout', { outcome: 'model_failure', message: 'The provider request timed out safely.', status: 504 }],
+    ['malformed output', { outcome: 'model_failure', message: 'The provider response was rejected safely.', status: 502 }],
+    ['other provider failure', { outcome: 'model_failure', message: 'The provider could not complete the request.', status: 502 }],
+  ])('keeps Support independent after %s', async (_label, failure) => {
+    installApi({ modelFailure: failure })
+    const wrapper = mount(App, { attachTo: document.body })
+    await flushPromises()
+    await wrapper.findAll('.entry-view .secondary')[0].trigger('click')
+    await flushPromises()
+    const scenario = 'A fictional schedule changed before a workshop.'
+    await wrapper.get('#custom-interpretation').setValue(scenario)
+    await wrapper.get('.custom-entry .secondary').trigger('click')
+    await flushPromises()
+    await wrapper.get('[data-state="perspective-evidence"] .primary').trigger('click')
+    await flushPromises()
+    expect(wrapper.get('[data-state="perspective-model-failed"]').text()).toContain(scenario)
+    const submissionsBeforeSupport = globalThis.fetch.mock.calls.filter(
+      ([url]) => String(url).endsWith('/perspective/alternatives'),
+    ).length
+    const supportButton = wrapper.get('.support-button')
+    supportButton.element.focus()
+    await supportButton.trigger('click')
+    await flushPromises()
+    expect(wrapper.get('[data-state="support-open"]').exists()).toBe(true)
+    await wrapper.get('[data-state="support-open"] .primary').trigger('click')
+    await flushPromises()
+    expect(document.activeElement).toBe(supportButton.element)
+    expect(wrapper.get('[data-state="perspective-model-failed"]').text()).toContain(scenario)
+    expect(globalThis.fetch.mock.calls.filter(
+      ([url]) => String(url).endsWith('/perspective/alternatives'),
+    )).toHaveLength(submissionsBeforeSupport)
+    expect(globalThis.fetch.mock.calls.filter(
+      ([url, request]) => String(url).endsWith('/perspective-artifacts') && request?.method === 'POST',
+    )).toHaveLength(0)
+    wrapper.unmount()
+  })
+
+  it('ignores a late custom response after cancellation and adds no persistence', async () => {
+    let resolveLate
+    installApi({
+      perspectiveDeferred: () => new Promise((resolve) => {
+        resolveLate = () => resolve(new Response(JSON.stringify({
+          outcome: 'success',
+          request: { attempt_count: 1 },
+          alternatives: {
+            alternatives: [{
+              alternative: 'This late result must not appear.',
+              reasoning: 'The delayed mocked response arrived after cancellation.',
+              missing_context: 'It is stale.',
+            }],
+            reflection_question: 'Should this stale result be visible?',
+            limitation: 'Coursework prototype; not therapy or medical advice.',
+          },
+          saved: false,
+        }), { status: 200, headers: { 'Content-Type': 'application/json' } }))
+      }),
+    })
+    const wrapper = mount(App)
+    await flushPromises()
+    await wrapper.findAll('.entry-view .secondary')[0].trigger('click')
+    await flushPromises()
+    await wrapper.get('#custom-interpretation').setValue('A fictional room changed before a meeting.')
+    await wrapper.get('.custom-entry .secondary').trigger('click')
+    await flushPromises()
+    await wrapper.get('[data-state="perspective-evidence"] .primary').trigger('click')
+    await flushPromises()
+    expect(wrapper.get('[data-state="perspective-alt-loading"]').exists()).toBe(true)
+    await wrapper.get('[data-state="perspective-alt-loading"] .secondary').trigger('click')
+    expect(wrapper.get('[data-state="perspective-alt-ready"]').text()).toContain('not an analysis of the submitted scenario')
+    resolveLate()
+    await flushPromises()
+    const finalState = wrapper.get('[data-state="perspective-alt-ready"]')
+    expect(finalState.text()).not.toContain('This late result must not appear.')
+    expect(finalState.text()).toContain('Reviewed fictional example')
+    expect(globalThis.fetch.mock.calls.filter(
+      ([url]) => String(url).endsWith('/perspective/alternatives'),
+    )).toHaveLength(1)
+    expect(globalThis.fetch.mock.calls.filter(
+      ([url, request]) => String(url).endsWith('/perspective-artifacts') && request?.method === 'POST',
+    )).toHaveLength(0)
+  })
+
+  it('saves and deletes only the explicitly selected Perspective artifact', async () => {
+    const wrapper = mount(App)
+    await flushPromises()
+    await wrapper.findAll('.entry-view .secondary')[0].trigger('click')
+    await flushPromises()
+    await wrapper.get('#custom-interpretation').setValue('A fictional agenda changed before a meeting.')
+    await wrapper.get('.custom-entry .secondary').trigger('click')
+    await flushPromises()
+    await wrapper.get('[data-state="perspective-evidence"] .primary').trigger('click')
+    await flushPromises()
+    expect(globalThis.fetch.mock.calls.filter(
+      ([url, request]) => String(url).endsWith('/perspective-artifacts') && request?.method === 'POST',
+    )).toHaveLength(0)
+    await wrapper.get('.alternative-card .button').trigger('click')
+    const saveButton = wrapper.findAll('[data-state="perspective-alt-ready"] button')
+      .find((button) => button.text().includes('Save reviewed alternative'))
+    await saveButton.trigger('click')
+    await flushPromises()
+    expect(globalThis.fetch.mock.calls.filter(
+      ([url, request]) => String(url).endsWith('/perspective-artifacts') && request?.method === 'POST',
+    )).toHaveLength(1)
+    const deleteButton = wrapper.findAll('[data-state="perspective-alt-ready"] button')
+      .find((button) => button.text().includes('Delete saved alternative'))
+    await deleteButton.trigger('click')
+    await flushPromises()
+    const deleteCalls = globalThis.fetch.mock.calls.filter(
+      ([url, request]) => String(url).includes('/perspective-artifacts/artifact-1') && request?.method === 'DELETE',
+    )
+    expect(deleteCalls).toHaveLength(1)
+    expect(globalThis.fetch.mock.calls.filter(
+      ([url, request]) => String(url).includes('/next-step-seeds/') && request?.method === 'DELETE',
+    )).toHaveLength(0)
+  })
+
   it('keeps the Next-Step Seed user-authored behind preview and explicit Save', async () => {
     const wrapper = mount(App)
     await flushPromises()
@@ -336,6 +473,16 @@ describe('FocusBloom Vue experience', () => {
     expect(saveBody.situation_text).toBe('a fictional workshop detail changes')
     expect(saveBody.action_text).toBe('review the written instructions')
     expect(saveBody.source).toBe('template')
+    const deleteSeed = wrapper.findAll('[data-state="next-step-seed"] button')
+      .find((button) => button.text().includes('Delete seed'))
+    await deleteSeed.trigger('click')
+    await flushPromises()
+    expect(globalThis.fetch.mock.calls.filter(
+      ([url, request]) => String(url).includes('/next-step-seeds/seed-1') && request?.method === 'DELETE',
+    )).toHaveLength(1)
+    expect(globalThis.fetch.mock.calls.filter(
+      ([url, request]) => String(url).includes('/perspective-artifacts/') && request?.method === 'DELETE',
+    )).toHaveLength(0)
   })
 
   it('shows factual populated history and a no-match Garden Guide outcome without an invented answer', async () => {

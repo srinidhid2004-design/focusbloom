@@ -171,6 +171,30 @@ option between rounds, focuses the refreshed group, uses position-neutral hints,
 and ends only through Stop, Skip, or the existing Support interruption. Tests
 used fake keys, mocked gateway output, stubbed fetch, and temporary databases.
 No environment file, project runtime database, Figma artifact, or live Gemini
-request was accessed. These tests establish contract behavior only; a future
-separately authorized live-model check is required to evaluate whether output is
-relevant to a fictional custom scenario.
+request was accessed during Prompt 12. At that checkpoint, a later separately
+authorized live-model check remained necessary; Prompt 13 performed that bounded
+evaluation as recorded below.
+
+## Prompt 13 scenario evaluation and live variation
+
+Codex added a versioned 15-scenario fictional fixture and deterministic backend
+and frontend tests for continuing/terminal Focus Garden behavior, Support after
+model failures, reviewed and dynamic Perspective paths, explicit artifact and
+Seed persistence, safe failures, duplicate/cancelled/stale responses, and the
+one- or two-call read-only Garden Guide boundary. Mocked and live observations
+are kept separate in `docs/part-3-3-evaluation.md`.
+
+After a safe configuration preflight, Codex made exactly four authorized live
+Perspective submissions: scenario A twice, then scenarios B and C once each.
+Each used one provider request, succeeded without a retry or fallback, satisfied
+the strict bounded schema, and created no artifact or Seed. No live Garden Guide
+request was made. The two A responses differed in wording while preserving the
+same uncertainty boundary. The evaluation also recorded that valid structure is
+not proof of perfect grounding: one response relied on general claims not stated
+in the fictional input. No raw provider payload, credential, personal data, or
+private path was added to repository evidence.
+
+This is coursework response-quality and control-flow evidence only. It does not
+establish therapy, diagnosis, crisis handling, clinical safety, attention,
+emotion, improvement, or effectiveness. Real screen-reader use, non-English
+scenarios, and long-term repeated use remain untested.

@@ -2,7 +2,7 @@
 
 - **Date:** November 2, 2026
 - **Project:** FocusBloom
-- **Milestone:** Assignment 3.3 — dynamic Perspective refinement checkpoint
+- **Milestone:** Assignment 3.3 — fifteen-scenario evaluation and live variation
 - **Working branch:** `feature/assignment-3-part-3`
 - **Base/main SHA:** `769bfcd8581efc8faab9ab64d953fa995c3595f8`
 - **Public repository:** https://github.com/srinidhid2004-design/focusbloom
@@ -46,31 +46,36 @@ failure label was added.
 - No runtime database access, environment-file read, live Gemini request, Figma
   action, dependency change, or voice/audio work occurred.
 
-## Verification
+## Verification and evaluation
 
-- Focused Perspective backend: 22 passed with two known non-failing dependency
-  warnings.
-- Complete backend: 75 passed with the same two warnings.
+- Focused Perspective/Prompt-13/Guide backend: 65 passed with two known
+  non-failing dependency warnings.
+- Complete backend: 84 passed with the same two warnings.
 - `pip check`: no broken requirements.
-- Complete frontend: 2 files, 22 tests passed.
+- Complete frontend: 2 files, 28 tests passed.
 - ESLint: passed with zero warnings.
 - Production build: passed with 22 modules transformed.
 
-Tests used fake keys, an injected fake gateway, stubbed fetch, and disposable
-temporary databases. They are mocked contract/application evidence, not live
-response-quality or clinical/effectiveness evidence.
+The mocked 15-scenario matrix passed Support-independence, explicit-persistence,
+and bounded-model-control checks. Exactly four separately authorized live
+Perspective submissions followed: scenario A twice and B/C once each. Each used
+one request, one successful attempt-count-1 lifecycle row, no retry or fallback,
+and no artifact or Seed save. No live Garden Guide request occurred. The two A
+responses varied while retaining the uncertainty boundary. One B result used
+general claims beyond the supplied scenario, so strict validation is explicitly
+not treated as proof of ideal grounding.
 
-## Next authorized evaluation
+## Remaining verification boundary
 
-A later task may authorize exactly one fictional custom-scenario live request to
-assess relevance and tailoring under the new response schema. That evaluation
-must not repeat the already verified Garden Guide flow, access private data, or
-be described as therapy, diagnosis, crisis, attention/emotion, improvement,
-effectiveness, or clinical-safety validation.
+No additional live provider request is needed for this checkpoint. Real
+screen-reader use, non-English scenarios, long-term repeated use, clean-checkout
+verification, recording, final Assignment 3.3 reporting, merge, and Canvas work
+remain separate future/manual tasks. Nothing here is therapy, diagnosis, crisis,
+attention/emotion, improvement, effectiveness, or clinical-safety validation.
 
 ## Historical continuity
 
-`main`, root `report.md`, `docs/part-3-1-decisions.md`, prompts 01–11, original
+`main`, root `report.md`, `docs/part-3-1-decisions.md`, prompts 01–12, original
 Figma sections, prior evidence images, and
 `reports/assignment-3-part-2/report.md` remain unchanged. This handoff records
 the feature contents and base; the final task response and feature-branch Git
