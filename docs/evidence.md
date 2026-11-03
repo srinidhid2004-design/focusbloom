@@ -24,6 +24,9 @@ publication checks.
 | [`10-integrated-live-verification.md`](../prompts/10-integrated-live-verification.md) | Run the bounded fictional integrated flow and make only narrowly authorized corrections | Provider-schema and instruction alignment, successful Perspective/Garden evidence, explicit save/delete evidence, and final verification commit | Full and focused suites; bounded live request ledger; UI, console, read-only database, grounding, focus, Support, and public-safe evidence checks |
 | [`11-final-assignment-report.md`](../prompts/11-final-assignment-report.md) | Finalize the Canvas-ready report and authorized publication without another provider request or runtime-database access | Part 3.2 `report.md`, current Support review, publication evidence, and synchronized continuity records | Seven-source manual review; full and focused suites; OpenAPI/temp-schema inspections; credential/private-path/runtime scans; staged, merge, and public-link gates |
 | [`12-part-3-3-dynamic-perspective.md`](../prompts/12-part-3-3-dynamic-perspective.md) | Separate reviewed demonstration content from a dynamic custom Perspective route and complete the continuing Focus Garden rounds | Scenario-only request, strict reasoning/missing-context/question response, neutral fallback, explicit save/Seed boundary, moving rounds, and synchronized active records | 22 focused Perspective backend tests; 75-test backend suite; 22-test frontend suite; pip/lint/build; mocked 0/1 request counts; repository and protected-file audits |
+| [`13-part-3-3-scenario-evaluation.md`](../prompts/13-part-3-3-scenario-evaluation.md) | Evaluate 15 fictional scenarios and four bounded live Perspective variations | Fifteen-scenario fixture/ledger, mocked cross-case tests, four-request live variation evidence, and explicit semantic-grounding limitation | 84 backend and 28 frontend tests; mocked 0/1/2 call counts; four authorized live Perspective requests; no live Guide call or automatic save |
+| [`14-grounding-clean-checkout-recording-plan.md`](../prompts/14-grounding-clean-checkout-recording-plan.md) | Add exact scenario anchoring, verify it once live, prove clean setup, and plan the final recording | Anchor schema/validation/UI, one-request live evidence, corrected README, clean-checkout record, and recording plan | 93 backend and 28 frontend tests; anchor matrix; one authorized live UI request; second public clean checkout and safe no-key runtime |
+| [`15-final-assignment-3-part-3.md`](../prompts/15-final-assignment-3-part-3.md) | Finalize the report, documentation, verification, publication, public-link audit, and Canvas handoff | Canvas report, final evidence/verification/handoff, corrected recording links, feature documentation commit, and non-fast-forward merge | 93 complete and 74 focused backend tests; 28 frontend tests; pip/lint/build; schema/API; zero production audit vulnerabilities; staged/merge/public-link gates |
 
 ## Consequential design comparison
 
@@ -705,3 +708,48 @@ submission preserved input with one zero-attempt lifecycle row and zero provider
 calls; and Support remained available. Browser warning/error logs were empty,
 database integrity was `ok`, and artifacts/Seeds remained zero. `npm ci` reported
 11 moderate audit findings; no dependency remediation was attempted or claimed.
+
+## Assignment 3.3 finalization evidence — November 3, 2026
+
+### Public links and recording roles
+
+The corrected unauthenticated Drive pages exposed **PolishedDemo.mp4** as the
+finished-application recording and **CodeDemoExplanation.mp4** as the
+process/failure/evidence/code recording. No request-access page appeared. The
+embedded player could not decode playback in the automated browser, so the
+observed public evidence is page access and title; the human-provided corrected
+mapping and recording review establish the course roles. No video was
+downloaded, altered, or republished.
+
+All seven official Support destinations were reopened without submitting data.
+Expected titles, official SAMHSA/HHS or 911.gov identity, the emergency/988
+purposes, and the FindTreatment.gov locator/non-referral boundaries remained
+visible. No call, text, chat, search, location, form, or cookie choice was
+submitted.
+
+### Final report and verification
+
+The self-contained Canvas report is
+`reports/assignment-3-part-3/report.md`. It preserves the submitted Part 3.1 and
+Part 3.2 reports, revisits the design pivot, provides the 15-scenario
+expected/observed table, distinguishes mocked and live evidence, records the
+LIVE B semantic-grounding finding and anchor response, links both recordings,
+and names the manual Canvas upload file.
+
+Final mocked/disposable verification observed 93 complete backend tests, 74
+focused Perspective/grounding/scenario/Guide tests, 28 frontend tests, clean
+`pip check`, zero-warning ESLint, a 22-module build, and zero production-only npm
+audit vulnerabilities. A disposable database reported schema version 2, nine
+expected tables, clean integrity, and zero foreign-key violations; OpenAPI
+retained 22 operations. The two existing upstream deprecation warnings remained
+non-failing. No live Gemini call or existing runtime-database access occurred.
+
+### Publication boundary
+
+The start gate matched the required feature/main SHAs and clean-tree state.
+Protected reports, prompts 01–14, dependencies, lockfiles, fixed provider
+contract, historical evidence, and ignored runtime state remained intact. The
+authorized Git sequence stages only the final Assignment 3.3 documentation,
+publishes the feature commit normally, verifies a non-fast-forward two-parent
+merge on `main`, and publishes `main` without rewriting history. The resulting
+self-referential feature and merge SHAs are reported in the task response.

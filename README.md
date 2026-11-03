@@ -17,9 +17,9 @@ text, clicks, timing, completion, or history.
 
 ## Current milestone
 
-This feature branch implements the penultimate Assignment 3.3 grounding
-refinement on top of the approved Assignment 3.2 FocusBloom backend and Vue
-experience. It retains the
+This feature branch completes the Assignment 3.3 dynamic-Perspective,
+grounding-refinement, evaluation, clean-checkout, and final-report work on top
+of the approved Assignment 3.2 FocusBloom backend and Vue experience. It retains the
 exact nine-table version-2 SQLite schema,
 22-operation `/api` surface, factual activity/session persistence, explicitly
 saved Perspective artifacts and Next-Step Seeds, ordered history conversations,
@@ -48,6 +48,7 @@ Authoritative active records:
 - [Assignment 3.3 refinement plan](docs/part-3-3-refinement-plan.md)
 - [Assignment 3.3 grounding refinement](docs/part-3-3-grounding-refinement.md)
 - [Assignment 3.3 recording plan](docs/part-3-3-recording-plan.md)
+- [Assignment 3.3 final report](reports/assignment-3-part-3/report.md)
 - [Design pipeline](docs/design-pipeline.md)
 - [Support resources](docs/support-resources.md)
 - [Verification record](docs/verification.md)
@@ -268,9 +269,9 @@ read-only protections remain unchanged.
 
 The Canvas-ready Assignment 3.2 report is
 [`reports/assignment-3-part-2/report.md`](reports/assignment-3-part-2/report.md).
-Official Support sources were manually rechecked on October 29, 2026, and the
-final feature regression passed without a provider request or runtime-database
-access. Canvas upload remains a manual human action. No key is needed for
+Official Support sources were manually rechecked again on November 3, 2026, and
+the final feature regression passed without a provider request or runtime-
+database access. Canvas upload remains a manual human action. No key is needed for
 ordinary Focus Garden, History browsing, saved-text controls, or Support.
 
 ## Assignment 3.3 refinement status
@@ -317,3 +318,21 @@ clone completed environment/dependency setup, schema initialization, all tests,
 lint/build, service startup, safe health, Focus rounds, static Perspective,
 independent Support, and the no-key custom failure path using these instructions
 alone. No local key or ignored artifact was copied into that checkout.
+
+## Assignment 3.3 final submission
+
+The Canvas-ready final report is
+[`reports/assignment-3-part-3/report.md`](reports/assignment-3-part-3/report.md).
+It links the public repository evidence and the corrected public recordings:
+
+- [Finished application — PolishedDemo.mp4](https://drive.google.com/file/d/1NOoCNPntjhuIkGoTXebhecTpugK4Zg28/view?usp=sharing)
+- [Process, failure, evidence, and code — CodeDemoExplanation.mp4](https://drive.google.com/file/d/1sKYhp84QHkIQUOjFh-piDj1nAfjkcZqs/view?usp=sharing)
+
+Final feature verification passed 93 backend tests, 74 focused backend tests,
+28 frontend tests, `pip check`, ESLint with zero warnings, a 22-module
+production build, and a production-only npm audit with zero vulnerabilities. A
+disposable database reported schema version 2, nine expected tables, clean
+integrity, zero foreign-key violations, and the OpenAPI document retained 22
+operations. This finalization made no live Gemini request and did not open the
+existing runtime database. Real screen-reader use, non-English scenarios, and
+long-term repeated use remain untested.

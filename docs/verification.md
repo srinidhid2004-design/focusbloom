@@ -1348,3 +1348,62 @@ clone's tracked state remained clean and all generated state was ignored.
 was attempted. The two validated temporary-checkout directories could not be
 deleted because execution policy blocked the cleanup command before it ran; no
 private temporary path is committed.
+
+## Assignment 3.3 final submission gate — November 3, 2026
+
+### Public recording and Support checks
+
+Unauthenticated Google Drive view pages returned the corrected public titles
+**PolishedDemo.mp4** for the finished-application link and
+**CodeDemoExplanation.mp4** for the process/failure/evidence/code link. Neither
+page displayed a request-access condition. The embedded video player could not
+decode playback in the automated browser, so page/title/access verification is
+recorded separately from the human recording review. No file was downloaded or
+republished.
+
+The seven official Support destinations were reopened in a normal browser. The
+observed titles remained **Find Support | SAMHSA**, **National 911 Program |
+911.gov**, **988 Suicide & Crisis Lifeline | SAMHSA**, **988 Lifeline Pre
+Conversation Survey**, **Home - FindTreatment.gov**, **FAQs -
+FindTreatment.gov**, and **About - FindTreatment.gov**. SAMHSA/HHS identity,
+the direction to call 911 for an emergency, 988 call/text/chat access, and the
+FindTreatment.gov locator/non-referral boundary remained visible. No cookie
+choice, form, call, text, chat, search, location, or personal data was submitted.
+
+### Final feature-branch results
+
+The final commands used the existing project environments, an explicitly blank
+Gemini environment, fake gateways/stubbed fetch, and disposable databases. They
+did not open the existing runtime database or make a live provider request.
+
+| Check | Observed result |
+| --- | --- |
+| Complete backend pytest | 93 passed; two known non-failing dependency deprecation warnings |
+| Focused Perspective/grounding/scenario/Guide pytest | 74 passed; the same two warnings |
+| `pip check` | No broken requirements found |
+| Disposable SQLite | Schema version 2; nine expected tables; `integrity_check=ok`; zero foreign-key violations |
+| OpenAPI | 22 operations |
+| Complete frontend tests | Two files, 28 tests passed |
+| ESLint | Passed with zero warnings |
+| Production build | Passed; 22 modules transformed |
+| `npm audit --omit=dev` | Zero production vulnerabilities |
+| `git diff --check` and staged equivalent | Required before commit; final result recorded in Prompt 15 and task response |
+
+The warnings are the existing Starlette TestClient/httpx bridge deprecation and
+the Google SDK `_UnionGenericAlias` Python deprecation. No dependency or lockfile
+was changed. The earlier clean checkout's `npm ci` reported 11 moderate
+all-dependency findings; the separately required production-only audit returned
+zero vulnerabilities, and no automatic fix was run.
+
+### Integrity boundary
+
+Before documentation changes, the feature branch and remote matched
+`4099d39c7067ba1ed2ac761492d1f15484ac2568`; local and remote `main` matched
+`769bfcd8581efc8faab9ab64d953fa995c3595f8`; and the tree/index were clean.
+The Part 3.1 and Part 3.2 reports, prompts 01–14, historical Figma evidence,
+dependencies, lockfiles, fixed model, timeout, one-attempt rule, no-fallback
+rule, schema, and API surface remained intact. Ignored environment, SQLite,
+dependency, build, cache, and log state was untracked. Final publication uses
+the authorized documentation-only feature commit and a verified non-fast-
+forward merge; resulting SHAs are reported after publication because a commit
+cannot embed its own SHA.

@@ -233,3 +233,29 @@ clone followed it successfully with no key: complete checks passed, the static
 and no-key runtime paths behaved as documented, and browser warning/error logs
 were empty. No ignored local artifact was copied. `npm ci` reported 11 moderate
 audit findings; no audit fix or dependency change was made in this checkpoint.
+
+## Prompt 15 final Assignment 3.3 report and publication
+
+Codex rechecked the corrected public recording mapping without using an
+authenticated Google session: **PolishedDemo.mp4** is the finished-application
+page and **CodeDemoExplanation.mp4** is the process/failure/evidence/code page.
+The public Drive pages exposed the expected titles without a permission-request
+screen. The automated embedded player could not decode playback, so page access
+and title verification remain distinct from the human recording review.
+
+Codex also manually reopened the seven official Support destinations without
+submitting a call, text, chat, search, location, cookie choice, or personal data.
+The expected government/service identities and the separate 911, 988, and
+FindTreatment.gov purposes remained visible.
+
+Final verification used fake gateways, stubbed fetch, and disposable SQLite
+state. It passed 93 backend tests, 74 focused Perspective/grounding/scenario/
+Guide tests, 28 frontend tests, dependency integrity, zero-warning ESLint, a
+22-module production build, a production-only audit with zero vulnerabilities,
+schema-version-2 integrity/foreign-key/table checks, and the 22-operation
+OpenAPI count. Codex created the Assignment 3.3 Canvas report and synchronized
+the active evidence, verification, prompt, and handoff records. No new live
+Gemini request occurred; no key or existing runtime database was read, copied,
+or committed. The authorized Git workflow publishes the feature documentation
+commit and then a verified non-fast-forward merge. Canvas submission remains a
+manual human action.

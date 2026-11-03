@@ -176,6 +176,8 @@ The one authorized anchored live evaluation is complete. It confirmed matching
 anchors and the visible warning but also retained tentative details not proved
 by the quotation. A corrected README also passed a second fresh public checkout
 through setup, schema initialization, complete checks, startup, safe health, and
-the required no-key UI path. Next, use the recording plan; do not infer complete
-grounding, clinical safety, or effectiveness. Manually recheck official Support
-sources by the documented review deadline or after a material source change.
+the required no-key UI path. The final recordings and Canvas-ready Assignment
+3.3 report are linked from the repository, and the public Support destinations
+were rechecked on November 3, 2026. Canvas upload is the remaining manual human
+step. None of this establishes complete grounding, clinical safety, or
+effectiveness.

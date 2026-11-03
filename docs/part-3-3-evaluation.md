@@ -496,3 +496,17 @@ that every generated statement is supported.
 
 The complete public-safe output and mocked/live separation are recorded in
 `docs/part-3-3-grounding-refinement.md`.
+
+## Final submission links
+
+The corrected public recording mapping was rechecked without an authenticated
+Google session on November 3, 2026:
+
+- [Finished application — PolishedDemo.mp4](https://drive.google.com/file/d/1NOoCNPntjhuIkGoTXebhecTpugK4Zg28/view?usp=sharing)
+- [Process, failure, evidence, and code — CodeDemoExplanation.mp4](https://drive.google.com/file/d/1sKYhp84QHkIQUOjFh-piDj1nAfjkcZqs/view?usp=sharing)
+
+Both Drive view pages exposed the expected public title and did not show a
+request-access screen. The automated embedded player could not decode playback,
+so this is a public page/title/access check rather than a second content review.
+The Canvas-ready synthesis is
+`reports/assignment-3-part-3/report.md`.
